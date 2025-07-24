@@ -287,7 +287,7 @@ button {
 }
 
 button:hover {
-  background: var(--color-primary-variant);
+  background: var(--color-peligro);
 }
 
 .error {
