@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 // Layouts
 import AsidebarLayout from '@/layouts/AsidebarLayout.vue'
@@ -6,6 +7,7 @@ import GestionLayout from '@/layouts/GestionLayout.vue'
 import AnalisisLayout from '@/layouts/AnalisisLayout.vue'
 
 // Vistas
+import Login from '@/views/Login.vue'
 import Inicio from '@/views/Inicio.vue'
 import GestionUsuarios from '@/views/GestionUsuarios.vue'
 import Analisis from '@/views/Analisis.vue'
@@ -13,42 +15,51 @@ import Analisis from '@/views/Analisis.vue'
 const routes = [
   {
     path: '/',
+    name: 'Login',
+    component: Login
+  },
+  {
+    path: '/inicio',
     component: AsidebarLayout,
-    children: [
-      {
-        path: '',
-        name: 'Inicio',
-        component: Inicio
-      }
-    ]
+    meta: { requiereAuth: true },
+    children: [{ path: '', name: 'Inicio', component: Inicio }]
   },
   {
     path: '/usuarios',
     component: GestionLayout,
-    children: [
-      {
-        path: '',
-        name: 'GestionUsuarios',
-        component: GestionUsuarios
-      }
-    ]
+    meta: { requiereAuth: true },
+    children: [{ path: '', name: 'GestionUsuarios', component: GestionUsuarios }]
   },
   {
     path: '/Caja',
     component: AnalisisLayout,
-    children: [
-      {
-        path: '',
-        name: 'Analisis',
-        component: Analisis
-      }
-    ]
+    meta: { requiereAuth: true },
+    children: [{ path: '', name: 'Analisis', component: Analisis }]
   }
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  const auth = useAuthStore()
+
+  // sincronizar con localStorage si recargó
+  if (!auth.isAuthenticated) {
+    auth.isAuthenticated = localStorage.getItem('isAuthenticated') === 'true'
+  }
+
+  if (to.name === 'Login' && auth.isAuthenticated) {
+    return next('/inicio')
+  }
+
+  if (to.meta.requiereAuth && !auth.isAuthenticated) {
+    return next({ name: 'Login' })
+  }
+
+  next()
 })
 
 export default router

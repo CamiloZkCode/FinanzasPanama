@@ -152,7 +152,7 @@ b {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.5s ease-in, color 0.5s ease-in, transform 0.5s ease-in;
+    transition: background-color 300ms ease-in, color 300ms ease-in, transform 300ms ease-in;
 
 }
 

@@ -68,6 +68,11 @@ body.dark-theme-variables{
     --box-shadow:0 2rem 3rem var(--color-light);
 }
 
+body, html, div, header, main, aside, section, button, input {
+  transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease;
+}
+
+
 /* =================== Media Queries  =================== */
 /*1200px*/
 

@@ -13,7 +13,7 @@
         </div>
 
         <div class="sidebar">
-            <router-link to="/" class="mi-enlace" active-class="active">
+            <router-link to="/inicio" class="mi-enlace" active-class="active">
                 <span class="material-symbols-outlined">
                     browse
                 </span>
@@ -52,12 +52,10 @@
             </router-link>
 
 
-            <router-link to="/" class="mi-enlace" active-class="active">
-                <span class="material-symbols-outlined">
-                    logout
-                </span>
-                <h3>Cerrar Sesion</h3>
-            </router-link>
+            <a href="#"  @click.prevent="handleLogout" class="mi-enlace">
+                <span class="material-symbols-outlined">logout</span>
+                <h3>Cerrar Sesión</h3>
+            </a>
 
 
             <router-link to="/" class="mi-enlace" active-class="active">
@@ -82,9 +80,17 @@ const cerrarMenu = () => {
     menuStore.cerrar()
 }
 
-/*========================Pagina Activa =====================*/
+/*========================Cerrar Sesion =====================*/
+import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
 
+const auth = useAuthStore()
+const router = useRouter()
 
+const handleLogout = () => {
+  auth.logout()
+  router.push('/')
+}
 
 </script>
 
@@ -100,7 +106,6 @@ const cerrarMenu = () => {
         'GRAD' 0,
         'opsz' 24
 }
-
 
 .mi-enlace {
     color: var(--color-oscuro);
@@ -120,7 +125,6 @@ h1 {
 h2 {
     font-size: 1.4rem;
     font-weight: 600;
-
 }
 
 h3 {
@@ -319,8 +323,8 @@ aside .sidebar .mi-enlace .reclamos-count {
         animation: ShowMenu 400ms ease forwards;
     }
 
-    @keyframes ShowMenu{
-        to{
+    @keyframes ShowMenu {
+        to {
             left: 0;
         }
     }
@@ -338,7 +342,7 @@ aside .sidebar .mi-enlace .reclamos-count {
         display: inline;
     }
 
-    aside .sidebar h3{
+    aside .sidebar h3 {
         display: inline;
     }
 
