@@ -1,23 +1,23 @@
 <template>
     <div class="tabla-inicio">
-        <h2>Informacion Principal</h2>
+        <h2>Tarjetas</h2>
         <table>
             <thead>
                 <tr>
+                    <th>Estado/Cuota</th>
                     <th>Nombre</th>
-                    <th>Monto</th>
-                    <th>Fecha Solicitud</th>
+                    <th>Abono</th>
                     <th>Estado</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>Camilo Garcia</td>
-                    <td>$5000</td>
-                    <td>22/07/2025</td>
-                    <td class="success">Aprobado</td>
-                    <td class="primary">Detalles </td>
+                    <td class="success">1</td>
+                    <td>Camilo</td>
+                    <td>500</td>
+                    <td>Deuda</td>
+                    <td class="primary">Detalles</td>
                 </tr>
 
                 <tr>

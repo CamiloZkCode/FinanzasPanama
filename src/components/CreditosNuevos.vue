@@ -1,6 +1,6 @@
 <template>
     <div class="estadisticas claves">
-        <h2>Fidelidad</h2>
+        <h2>Creditos Nuevos</h2>
         <div class="estadistica fidelidad">
             <div class="icono">
                 <span class="material-symbols-outlined">

@@ -1,20 +1,11 @@
 <template>
-
     <div class="estadisticas">
         <div class="estadistica1">
             <span class="material-symbols-outlined"> credit_card </span>
             <div class="middle">
                 <div class="left">
-                    <h3>Total Deuda</h3>
-                    <h2>$5000,00</h2>
-                </div>
-                <div class="progress">
-                    <svg>
-                        <circle cx='38' cy="38" r="36"></circle>
-                    </svg>
-                    <div class="number">
-                        <p>100%</p>
-                    </div>
+                    <h3>Tarjetas</h3>
+                    <h2>15</h2>
                 </div>
             </div>
             <small class="texto-muted"> Ultimas 24 horas</small>
@@ -24,16 +15,8 @@
             <span class="material-symbols-outlined"> credit_card_heart </span>
             <div class="middle">
                 <div class="left">
-                    <h3>Abonado</h3>
+                    <h3>Cobrado</h3>
                     <h2>$3500,00</h2>
-                </div>
-                <div class="progress">
-                    <svg>
-                        <circle cx='38' cy="38" r="36"></circle>
-                    </svg>
-                    <div class="number">
-                        <p>70%</p>
-                    </div>
                 </div>
             </div>
             <small class="texto-muted"> Ultimas 24 horas</small>
@@ -46,14 +29,6 @@
                 <div class="left">
                     <h3>Deuda</h3>
                     <h2>$1500,00</h2>
-                </div>
-                <div class="progress">
-                    <svg>
-                        <circle cx='38' cy="38" r="36"></circle>
-                    </svg>
-                    <div class="number">
-                        <p>30%</p>
-                    </div>
                 </div>
             </div>
             <small class="texto-muted"> Ultimas 24 horas</small>
@@ -147,7 +122,7 @@ b {
 .estadisticas {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 .estadisticas>div {
@@ -168,6 +143,7 @@ b {
     border-radius: 50%;
     color: var(--color-blanco);
     font-size: 1.8rem;
+    margin-bottom: 1rem;
 }
 
 .estadisticas>div.estadistica2 span {
@@ -188,7 +164,7 @@ b {
 
 .estadisticas h3 {
     margin: 0rem 0 0rem;
-    font-size: 1rem;
+    font-size: 1.3rem;
     font-weight: 500;
 }
 
@@ -197,52 +173,6 @@ b {
     font-weight: 600;
 }
 
-.estadisticas .progress {
-    position: relative;
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-}
-
-.estadisticas svg {
-    width: 7rem;
-    height: 7rem;
-}
-
-.estadisticas svg circle {
-    fill: none;
-    stroke: var(--primer-color);
-    stroke-width: 14;
-    stroke-linecap: round;
-    transform: translate(5px, 5px);
-    stroke-dasharray: 226;
-    stroke-dashoffset: 226;
-
-}
-
-.estadisticas .estadistica1 svg circle {
-    stroke-dashoffset: 0;
-
-}
-
-.estadisticas .estadistica2 svg circle {
-    stroke-dashoffset: 67;
-}
-
-.estadisticas .estadistica3 svg circle {
-    stroke-dashoffset: 158;
-}
-
-.estadisticas .progress .number {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    }
 
 .estadisticas small{
     display: block;
@@ -254,6 +184,25 @@ b {
         grid-template-columns: 1fr;
         gap: 0;
     }
+
+    .estadisticas > div {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 1rem;
+  }
+
+    .estadisticas > div span {
+    align-self: center; 
+    justify-self: center; 
+    margin-bottom: 0;
+  }
+
+  .estadisticas small {
+    grid-column: 1 / -1; /* ✅ ocupa toda la fila abajo */
+    margin-top: 0.5rem;
+    text-align: left; /* o center, si prefieres centrado */
+  }
 
 
 }

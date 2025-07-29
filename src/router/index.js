@@ -5,12 +5,14 @@ import { useAuthStore } from '@/stores/auth'
 import AsidebarLayout from '@/layouts/AsidebarLayout.vue'
 import GestionLayout from '@/layouts/GestionLayout.vue'
 import AnalisisLayout from '@/layouts/AnalisisLayout.vue'
+import PoliticasLayout from '../layouts/PoliticasLayout.vue'
 
 // Vistas
 import Login from '@/views/Login.vue'
 import Inicio from '@/views/Inicio.vue'
 import GestionUsuarios from '@/views/GestionUsuarios.vue'
 import Analisis from '@/views/Analisis.vue'
+import Politicas from '../views/Politicas.vue'
 
 const routes = [
   {
@@ -35,6 +37,12 @@ const routes = [
     component: AnalisisLayout,
     meta: { requiereAuth: true },
     children: [{ path: '', name: 'Analisis', component: Analisis }]
+  },
+  {
+    path: '/Politicas',
+    component: PoliticasLayout,
+    meta: { requiereAuth: true },
+    children: [{ path: '', name: 'Politicas', component: Politicas }]
   }
 ]
 

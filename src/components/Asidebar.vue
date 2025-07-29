@@ -3,7 +3,7 @@
         <div class="top">
             <div class="logo">
                 <img src="@/assets/img/logo.png" alt="logo">
-                <h2>FINANZAS <span class="danger">VY</span></h2>
+                <h2>YAG <span class="danger">BANK</span></h2>
             </div>
             <div class="cerrar" id="cerrar-btn" @click="cerrarMenu">
                 <span class="material-symbols-outlined">
@@ -32,33 +32,46 @@
                 <span class="material-symbols-outlined">
                     payment_arrow_down
                 </span>
-                <h3>Solicitar Credito</h3>
+                <h3>Credito Cliente</h3>
+            </router-link>
+
+            <router-link to="/" class="mi-enlace" active-class="active">
+                <span class="material-symbols-outlined">
+                    payments
+                </span>
+                <h3>Credito Funcionario</h3>
+            </router-link>
+
+            <router-link to="/" class="mi-enlace" active-class="active">
+                <span class="material-symbols-outlined">
+                    checkbook
+                </span>
+                <h3>Informe Ingresos</h3>
+            </router-link>
+
+
+            <router-link to="/" class="mi-enlace" active-class="active">
+                <span class="material-symbols-outlined">
+                    request_quote
+                </span>
+                <h3>informe Gastos</h3>
             </router-link>
 
             <router-link to="/Caja" class="mi-enlace" active-class="active">
                 <span class="material-symbols-outlined">
                     point_of_sale
                 </span>
-                <h3>Analisis</h3>
+                <h3>Caja</h3>
             </router-link>
 
 
-            <router-link to="/" class="mi-enlace" active-class="active">
-                <span class="material-symbols-outlined">
-                    support_agent
-                </span>
-                <h3>Reclamos</h3>
-                <span class="reclamos-count">1</span>
-            </router-link>
-
-
-            <a href="#"  @click.prevent="handleLogout" class="mi-enlace">
+            <a href="#" @click.prevent="handleLogout" class="mi-enlace">
                 <span class="material-symbols-outlined">logout</span>
                 <h3>Cerrar Sesión</h3>
             </a>
 
 
-            <router-link to="/" class="mi-enlace" active-class="active">
+            <router-link to="/Politicas" class="mi-enlace" active-class="active">
                 <span class="material-symbols-outlined">
                     info
                 </span>
@@ -88,8 +101,8 @@ const auth = useAuthStore()
 const router = useRouter()
 
 const handleLogout = () => {
-  auth.logout()
-  router.push('/')
+    auth.logout()
+    router.push('/')
 }
 
 </script>
@@ -143,12 +156,6 @@ small {
     font-size: 0.75rem;
 }
 
-.perfil-foto {
-    width: 2.8rem;
-    height: 2.8rem;
-    border-radius: 50%;
-    overflow: hidden;
-}
 
 .texto-muted {
     color: var(--color-info-gris);
@@ -201,8 +208,8 @@ aside .logo {
 }
 
 aside .logo img {
-    width: 2rem;
-    height: 2rem;
+    width: 3rem;
+    height: 3rem;
 }
 
 aside .cerrar {
@@ -217,7 +224,7 @@ aside .sidebar {
     flex-direction: column;
     height: 86vh;
     position: relative;
-    top: 2.4rem;
+    top: 1.5rem;
 }
 
 aside h3 {
@@ -231,7 +238,7 @@ aside .sidebar .mi-enlace {
     gap: 1rem;
     align-items: center;
     position: relative;
-    height: 3.8rem;
+    height: 3.4rem;
     transition: all 300ms ease;
 }
 
@@ -246,11 +253,14 @@ aside .sidebar .mi-enlace:last-child {
     width: 100%;
 }
 
+
 aside .sidebar .mi-enlace.active {
     background: var(--color-light);
     color: var(--primer-color);
     margin-left: 0;
 }
+
+
 
 aside .sidebar .mi-enlace.active:before {
     content: "";
@@ -271,16 +281,6 @@ aside .sidebar .mi-enlace:hover {
 aside .sidebar .mi-enlace:hover span {
     margin-left: 1rem;
 }
-
-
-aside .sidebar .mi-enlace .reclamos-count {
-    background: var(--color-peligro);
-    color: var(--color-blanco);
-    padding: 2px 10px;
-    font-size: 11px;
-    border-radius: var(--border-radius-1);
-}
-
 
 
 /*==================== MEDIA QUERIES ==================*/

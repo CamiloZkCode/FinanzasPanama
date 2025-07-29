@@ -4,7 +4,7 @@
       <div class="toggle-box">
         <div class="toggle-panel">
           <h1>¡ Bienvenido !</h1>
-          <h2 class="empresa">FINANZAS <span class="danger">VY</span></h2>
+          <h2 class="empresa">YAG<span class="danger"> BANK</span></h2>
           <img class="logo" src="@/assets/img/logo.png" alt="logo" />
           <p class="mensaje">Ingrese sus datos personales para usar todas las funciones del sitio</p>
         </div>

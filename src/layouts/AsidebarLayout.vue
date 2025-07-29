@@ -8,7 +8,10 @@
     </main> 
     <div class="right">
         <BarraLogin />
-        <Updates />
+        <CreditosNuevos />
+
+        
+        
     </div>
 </div>
 
@@ -19,12 +22,11 @@ import Asidebar from '../components/Asidebar.vue'
 import Estadisticas from '../components/Estadisticas.vue';
 import ListadoInicio from '../components/ListadoInicio.vue';  
 import BarraLogin from '../components/BarraLogin.vue';
-import Updates from '../components/Updates.vue';
+import CreditosNuevos from '../components/CreditosNuevos.vue';
 
 
 import { onMounted } from 'vue'
-import { useThemeStore } from '@/stores/theme'
-
+import { useThemeStore } from '@/stores/theme';
 const themeStore = useThemeStore()
 
 onMounted(() => {
@@ -41,7 +43,7 @@ onMounted(() => {
     display: grid;
     width: 96%;
     margin: 0 auto;
-    gap: 1.8rem;
+    gap: 1.4rem;
     grid-template-columns: 14rem auto 20rem;
     background: var(--color-background);
     color: var(--color-oscuro);

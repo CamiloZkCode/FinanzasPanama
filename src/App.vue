@@ -1,4 +1,7 @@
 <script setup>
+// main.js o app.js
+
+
 </script>
 <template>
  <router-view />
@@ -9,16 +12,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-    --primer-color: #7380ec;
-    --color-peligro: #ff7782;
-    --color-aprobado: #41f1b6;
-    --color-riesgo: #ffbb55;
+    --primer-color: #0188db;
+    --color-peligro: #f4303c;
+    --color-aprobado: #67c119;
+    --color-riesgo: #f4b908;
+    --color-morado:#b5106b;
+    --color-rosado: #D726A3;
     --color-blanco: #FFF;
     --color-info-gris: #7d8da1;
     --color-info-luz: #dce1eb;
     --color-oscuro: #363949;
     --color-light: rgba(132, 139, 200, 0.18);
-    --color-primary-variant: #111e88;
+    --color-primary-variant: #2749aa;
     --color-dark-variant: #677483;
     --color-background: #f6f6f9;
     --card-border-radius: 2rem;
