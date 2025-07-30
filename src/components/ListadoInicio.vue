@@ -1,50 +1,68 @@
 <template>
     <div class="tabla-inicio">
         <h2>Tarjetas</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Estado/Cuota</th>
-                    <th>Nombre</th>
-                    <th>Abono</th>
-                    <th>Estado</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="success">1</td>
-                    <td>Camilo</td>
-                    <td>500</td>
-                    <td>Deuda</td>
-                    <td class="primary">Detalles</td>
-                </tr>
 
-                <tr>
-                    <td>Camilo Garcia</td>
-                    <td>$5000</td>
-                    <td>22/07/2025</td>
-                    <td class="success">Aprobado</td>
-                    <td class="primary">Detalles </td>
-                </tr>
+        <div class="table-scroll">
+            <table>
+                <thead>
+                    <tr>
+                        <th>N°Cuota/ Pagada</th>
+                        <th>Nombre</th>
+                        <th>Pago/Abono</th>
+                        <th>Valor Cuota</th>
+                        <th>Prestamo Restante</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="estado">5/8</td>
+                        <td>Camilo Pimiento</td>
+                        <td>$500</td>
+                        <td>$100</td>
+                        <td>$500/$1000</td>
+                        <td class="primary">Detalles </td>
+                    </tr>
 
-                <tr>
-                    <td>Camilo Garcia</td>
-                    <td>$5000</td>
-                    <td>22/07/2025</td>
-                    <td class="success">Aprobado</td>
-                    <td class="primary">Detalles </td>
-                </tr>
+                    <tr>
+                        <td class="estado">5/8</td>
+                        <td>Camilo Pimiento</td>
+                        <td>$500</td>
+                        <td>$100</td>
+                        <td>$500/$1000</td>
+                        <td class="primary">Detalles </td>
+                    </tr>
 
-                <tr>
-                    <td>Camilo Garcia</td>
-                    <td>$5000</td>
-                    <td>22/07/2025</td>
-                    <td class="success">Aprobado</td>
-                    <td class="primary">Detalles </td>
-                </tr>
-            </tbody>
-        </table>
+
+                    <tr>
+                        <td class="estado">5/8</td>
+                        <td>Camilo Pimiento</td>
+                        <td>$500</td>
+                        <td>$100</td>
+                        <td>$500/$1000</td>
+                        <td class="primary">Detalles </td>
+                    </tr>
+
+                    <tr>
+                        <td class="estado">5/8</td>
+                        <td>Camilo Pimiento</td>
+                        <td>$500</td>
+                        <td>$100</td>
+                        <td>$500/$1000</td>
+                        <td class="primary">Detalles </td>
+                    </tr>
+
+                    <tr>
+                        <td class="estado">5/8</td>
+                        <td>Camilo Pimiento</td>
+                        <td>$500</td>
+                        <td>$100</td>
+                        <td>$500/$1000</td>
+                        <td class="primary">Detalles </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <router-link to="/" class="mi-enlace"> Ver mas </router-link>
     </div>
 </template>
@@ -141,6 +159,7 @@ b {
     box-shadow: var(--box-shadow);
     transition: all 300ms ease;
     margin-top: 0.5rem;
+    font-size: 1rem;
 }
 
 .tabla-inicio table:hover {
@@ -148,14 +167,19 @@ b {
 }
 
 table tbody td {
-    height: 2.2rem;
+    height: 2rem;
     border-bottom: 1px solid var(--color-light);
     color: var(--color-dark-variant);
-
 }
 
 table tbody tr:last-child td {
     border: none;
+}
+
+table tbody tr td.estado {
+    background: var(--color-peligro);
+    color: var(--color-blanco);
+    border-radius:var(--card-border-radius)
 }
 
 .tabla-inicio .mi-enlace {
@@ -179,16 +203,6 @@ table tbody tr:last-child td {
         width: 83vw;
     }
 
-    table thead tr th:last-child,
-    table thead tr th:first-child {
-        display: none;
-    }
-
-    table tbody tr td:last-child,
-    table tbody tr td:first-child {
-        display: none;
-    }
-
 
 }
 
@@ -200,9 +214,29 @@ table tbody tr:last-child td {
         width: 100%;
     }
 
-    .tabla-inicio table{
+    .tabla-inicio table {
         width: 100%;
         margin-top: 1rem;
+        font-size: 1rem;
     }
+
+    .tabla-inicio table th:nth-last-child(2),
+    .tabla-inicio table th:nth-last-child(3),
+    .tabla-inicio table td:nth-last-child(2),
+    .tabla-inicio table td:nth-last-child(3) {
+        display: none;
+
+    }
+
+    .tabla-inicio table th:first-child,
+    .tabla-inicio table td:first-child {
+        width: 1rem;
+        font-size: 1rem;
+        text-align: center;
+        padding: 0.1rem;
+        border-right: 1px solid transparent;
+    }
+
+
 }
 </style>

@@ -21,18 +21,6 @@
             </div>
             <small class="texto-muted"> Ultimas 24 horas</small>
         </div>
-
-
-        <div class="estadistica3">
-            <span class="material-symbols-outlined"> credit_card_clock </span>
-            <div class="middle">
-                <div class="left">
-                    <h3>Deuda</h3>
-                    <h2>$1500,00</h2>
-                </div>
-            </div>
-            <small class="texto-muted"> Ultimas 24 horas</small>
-        </div>
     </div>
 </template>
 
@@ -121,7 +109,7 @@ b {
 
 .estadisticas {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
 }
 

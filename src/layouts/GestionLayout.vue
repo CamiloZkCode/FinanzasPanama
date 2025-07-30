@@ -3,6 +3,7 @@
         <Asidebar />
         <main>
             <RouterView />
+            <TablaUsuarios />
         </main>
         <div class="right">
             <BarraLogin/>
@@ -14,6 +15,7 @@
 <script setup>
 import Asidebar from '../components/Asidebar.vue'
 import BarraLogin from '../components/BarraLogin.vue';
+import TablaUsuarios from '../components/GestionUsuarios/TablaUsuarios.vue';
 
 </script>
 

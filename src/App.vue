@@ -13,7 +13,7 @@
 
 :root {
     --primer-color: #0188db;
-    --color-peligro: #f4303c;
+    --color-peligro: #b6212b;
     --color-aprobado: #67c119;
     --color-riesgo: #f4b908;
     --color-morado:#b5106b;
