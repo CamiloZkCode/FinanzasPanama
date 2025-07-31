@@ -3,15 +3,10 @@
     <Asidebar />
     <main>
     <router-view />
-    <Estadisticas />
     <ListadoInicio />
     </main> 
     <div class="right">
         <BarraLogin />
-        <CreditosNuevos />
-
-        
-        
     </div>
 </div>
 
@@ -19,10 +14,8 @@
 
 <script setup>
 import Asidebar from '../components/Asidebar.vue'
-import Estadisticas from '../components/Estadisticas.vue';
 import ListadoInicio from '../components/ListadoInicio.vue';  
 import BarraLogin from '../components/BarraLogin.vue';
-import CreditosNuevos from '../components/CreditosNuevos.vue';
 
 
 import { onMounted } from 'vue'

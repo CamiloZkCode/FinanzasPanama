@@ -1,12 +1,18 @@
 <template>
-    <div class="tabla-inicio">
+    <div class="contenedor-tarjetas">
         <h2>Tarjetas</h2>
+        <div class="filtros">
+            <div class="filtro-cedula">
+                <input class="filtro-ced" type="text" placeholder="Busqueda por nombre" />
+                <span class="material-symbols-outlined">search</span>
+            </div>
+        </div>
 
-        <div class="table-scroll">
-            <table>
+        <div class="tabla-scrollable">
+            <table class="tabla-tarjetas">
                 <thead>
                     <tr>
-                        <th>N°Cuota/ Pagada</th>
+                        <th>N°Pagada</th>
                         <th>Nombre</th>
                         <th>Pago/Abono</th>
                         <th>Valor Cuota</th>
@@ -60,10 +66,127 @@
                         <td>$500/$1000</td>
                         <td class="primary">Detalles </td>
                     </tr>
+
+                    <tr>
+                        <td class="estado">5/8</td>
+                        <td>Camilo Pimiento</td>
+                        <td>$500</td>
+                        <td>$100</td>
+                        <td>$500/$1000</td>
+                        <td class="primary">Detalles </td>
+                    </tr>
+
+
+                    <tr>
+                        <td class="estado">5/8</td>
+                        <td>Camilo Pimiento</td>
+                        <td>$500</td>
+                        <td>$100</td>
+                        <td>$500/$1000</td>
+                        <td class="primary">Detalles </td>
+                    </tr>
+
+                    <tr>
+                        <td class="estado">5/8</td>
+                        <td>Camilo Pimiento</td>
+                        <td>$500</td>
+                        <td>$100</td>
+                        <td>$500/$1000</td>
+                        <td class="primary">Detalles </td>
+                    </tr>
+
+
+                    <tr>
+                        <td class="estado">5/8</td>
+                        <td>Camilo Pimiento</td>
+                        <td>$500</td>
+                        <td>$100</td>
+                        <td>$500/$1000</td>
+                        <td class="primary">Detalles </td>
+                    </tr>
+
+
+                    <tr>
+                        <td class="estado">5/8</td>
+                        <td>Camilo Pimiento</td>
+                        <td>$500</td>
+                        <td>$100</td>
+                        <td>$500/$1000</td>
+                        <td class="primary">Detalles </td>
+                    </tr>
+
+
+                    <tr>
+                        <td class="estado">5/8</td>
+                        <td>Camilo Pimiento</td>
+                        <td>$500</td>
+                        <td>$100</td>
+                        <td>$500/$1000</td>
+                        <td class="primary">Detalles </td>
+                    </tr>
+
+
+                    <tr>
+                        <td class="estado">5/8</td>
+                        <td>Camilo Pimiento</td>
+                        <td>$500</td>
+                        <td>$100</td>
+                        <td>$500/$1000</td>
+                        <td class="primary">Detalles </td>
+                    </tr>
+
+
+                    <tr>
+                        <td class="estado">5/8</td>
+                        <td>Camilo Pimiento</td>
+                        <td>$500</td>
+                        <td>$100</td>
+                        <td>$500/$1000</td>
+                        <td class="primary">Detalles </td>
+                    </tr>
+
+
+                    <tr>
+                        <td class="estado">5/8</td>
+                        <td>Camilo Pimiento</td>
+                        <td>$500</td>
+                        <td>$100</td>
+                        <td>$500/$1000</td>
+                        <td class="primary">Detalles </td>
+                    </tr>
+
+
+                    <tr>
+                        <td class="estado">5/8</td>
+                        <td>Camilo Pimiento</td>
+                        <td>$500</td>
+                        <td>$100</td>
+                        <td>$500/$1000</td>
+                        <td class="primary">Detalles </td>
+                    </tr>
+
+
+                    <tr>
+                        <td class="estado">5/8</td>
+                        <td>Camilo Pimiento</td>
+                        <td>$500</td>
+                        <td>$100</td>
+                        <td>$500/$1000</td>
+                        <td class="primary">Detalles </td>
+                    </tr>
+
+
+                    <tr>
+                        <td class="estado">5/8</td>
+                        <td>Camilo Pimiento</td>
+                        <td>$500</td>
+                        <td>$100</td>
+                        <td>$500/$1000</td>
+                        <td class="primary">Detalles </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
-        <router-link to="/" class="mi-enlace"> Ver mas </router-link>
     </div>
 </template>
 
@@ -146,41 +269,114 @@ b {
 
 /*========================== TABLA INICIO ==========================*/
 
-.tabla-inicio {
+.contenedor-tarjetas {
     margin-top: 1.0rem;
 }
 
-.tabla-inicio table {
+/*====filtro====*/
+.filtros {
+    display: flex;
+    margin: 1rem 0 0.5rem;
+    align-items: center;
+}
+
+.filtro-cedula {
+    display: flex;
+    align-items: center;
     background: var(--color-blanco);
-    width: 100%;
+    padding: 0 0.6rem;
+    border-radius: 0.4rem;
+    border: 1px solid var(--colo);
+    width: 17rem;
+}
+
+.filtro-cedula .filtro-ced {
+    border: none;
+    outline: none;
+    background: transparent;
+    flex: 1;
+    padding: 0.8rem;
+    font-size: 1rem;
+    justify-content: center;
+    margin: 0;
+    color: var(--color-oscuro);
+}
+
+.filtros .filtro-cedula .material-symbols-outlined {
+    margin-left: 0.5rem;
+    font-size: 1.2rem;
+    color: var(--color-oscuro);
+    cursor: pointer;
+}
+
+/*==Tabla==*/
+
+.tabla-scrollable {
+    max-height: 50vh;
+    overflow-y: auto;
+    overflow-x: auto;
+    white-space: nowrap;
+    margin-top: 0.5rem;
+    background: var(--color-blanco);
     border-radius: var(--card-border-radius);
-    padding: var(--card-padding);
-    text-align: center;
     box-shadow: var(--box-shadow);
+    padding: var(--card-padding);
+    transition: all 300ms ease;
+
+}
+
+.tabla-scrollable::-webkit-scrollbar {
+    height: 1rem;
+}
+
+.tabla-scrollable::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 0.8rem;
+}
+
+.contenedor-tarjetas .tabla-tarjetas {
+    width: auto;
+    min-width: 100%;
+    border-collapse: collapse;
+}
+
+
+.contenedor-tarjetas .tabla-tarjetas {
+    text-align: center;
     transition: all 300ms ease;
     margin-top: 0.5rem;
     font-size: 1rem;
+    width: 100%;
+    padding: 0;
+    box-shadow: none;
+    background: transparent;
 }
 
-.tabla-inicio table:hover {
+.contenedor-tarjetas .tabla-scrollable:hover {
     box-shadow: none;
 }
 
+
 table tbody td {
-    height: 2rem;
-    border-bottom: 1px solid var(--color-light);
+    height: 3rem;
+    border-bottom: 1.2px solid var(--color-light);
     color: var(--color-dark-variant);
 }
 
-table tbody tr:last-child td {
-    border: none;
-}
 
 table tbody tr td.estado {
+    background: var(--color-aprobado);
+    color: var(--color-blanco);
+    border-radius:var(--card-border-radius)
+}
+
+table tbody tr td.estado1 {
     background: var(--color-peligro);
     color: var(--color-blanco);
     border-radius:var(--card-border-radius)
 }
+
+
 
 .tabla-inicio .mi-enlace {
     text-align: center;
@@ -188,6 +384,10 @@ table tbody tr td.estado {
     margin: 1rem auto;
     color: var(--primer-color);
 }
+
+
+
+
 
 /*======================= Media Queries ======================= */
 @media screen and (max-width: 1200px) {
@@ -208,33 +408,43 @@ table tbody tr td.estado {
 
 /*======768======*/
 @media screen and (max-width:768px) {
-    .tabla-inicio {
+
+    .filtro-cedula {
+        width: 18rem;
+    }
+
+    /*==========TABLA==========*/
+    .contenedor-tarjetas {
         position: relative;
         margin: 2rem 0 0 0;
-        width: 100%;
     }
 
-    .tabla-inicio table {
-        width: 100%;
+    .contenedor-tarjetas .tabla-tarjetas {
+        min-width: 130%;
+    }
+
+
+    .contenedor-tarjetas table {
+        width: 90%;
         margin-top: 1rem;
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
 
-    .tabla-inicio table th:nth-last-child(2),
-    .tabla-inicio table th:nth-last-child(3),
-    .tabla-inicio table td:nth-last-child(2),
-    .tabla-inicio table td:nth-last-child(3) {
+    .contenedor-tarjetas table th:nth-last-child(3),
+    .contenedor-tarjetas table td:nth-last-child(3),
+    .contenedor-tarjetas table th:nth-last-child(2),
+    .contenedor-tarjetas table td:nth-last-child(2) {
         display: none;
-
     }
 
-    .tabla-inicio table th:first-child,
-    .tabla-inicio table td:first-child {
-        width: 1rem;
-        font-size: 1rem;
-        text-align: center;
-        padding: 0.1rem;
-        border-right: 1px solid transparent;
+    .tabla-tarjetas th:first-child,
+    .tabla-tarjetas td:first-child {
+        max-width: 60px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 0.8rem;
+        font-weight: 600;
     }
 
 
