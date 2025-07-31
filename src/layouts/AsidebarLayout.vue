@@ -14,7 +14,7 @@
 
 <script setup>
 import Asidebar from '../components/Asidebar.vue'
-import ListadoInicio from '../components/ListadoInicio.vue';  
+import ListadoInicio from '../components/TarjetasInicio.vue';  
 import BarraLogin from '../components/BarraLogin.vue';
 
 

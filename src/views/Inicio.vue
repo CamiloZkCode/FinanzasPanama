@@ -1,8 +1,5 @@
 <template>
-        <h1>Inicio</h1>
-        <div class="date">
-            <input type="date">
-        </div>
+    
 </template>
 
 <style scoped>

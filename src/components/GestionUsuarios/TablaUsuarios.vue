@@ -87,11 +87,12 @@
         <div class="contenedor-tabla">
             <div class="filtros">
                 <div class="filtro-cedula">
-                    <input class="filtro-ced" type="text" placeholder="Buscar por cédula" />
+                    <input class="filtro-ced" type="text" placeholder="Buscar por cédula" v-model="filtroCedula" />
                     <span class="material-symbols-outlined">search</span>
                 </div>
+
                 <div class="filtro-cargo">
-                    <Label class="lblcargo"> Cargo:</Label>
+                    <label class="lblcargo">Cargo:</label>
                     <select v-model="filtroCargo">
                         <option value="">Todos los cargos</option>
                         <option value="Administrador">Administrador</option>
@@ -100,7 +101,6 @@
                     </select>
                 </div>
             </div>
-
 
             <div class="tabla-scrollable">
                 <table class="tabla-usuarios">
@@ -115,51 +115,16 @@
                         </tr>
                     </thead>
                     <tbody>
-
-                        <tr>
-                            <td>5554545</td>
-                            <td>Supervisor</td>
-                            <td>Carlos</td>
-                            <td>Alberto</td>
-                            <td><span class="material-symbols-outlined delete">
-                                    delete
-                                </span>
+                        <tr v-for="usuario in usuariosFiltrados" :key="usuario.id_usuario">
+                            <td>{{ usuario.id_usuario }}</td>
+                            <td>{{ usuario.rol }}</td>
+                            <td>{{ usuario.nombre }}</td>
+                            <td>{{ usuario.jefe }}</td>
+                            <td>
+                                <span class="material-symbols-outlined delete">delete</span>
                             </td>
                             <td>
-                                <span class="material-symbols-outlined edit">
-                                    edit
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>5554545</td>
-                            <td>Supervisor</td>
-                            <td>Carlos</td>
-                            <td>Alberto</td>
-                            <td><span class="material-symbols-outlined delete">
-                                    delete
-                                </span>
-                            </td>
-                            <td>
-                                <span class="material-symbols-outlined edit">
-                                    edit
-                                </span>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>5554545</td>
-                            <td>Supervisor</td>
-                            <td>Carlos</td>
-                            <td>Alberto</td>
-                            <td><span class="material-symbols-outlined delete">
-                                    delete
-                                </span>
-                            </td>
-                            <td>
-                                <span class="material-symbols-outlined edit">
-                                    edit
-                                </span>
+                                <span class="material-symbols-outlined edit">edit</span>
                             </td>
                         </tr>
                     </tbody>
@@ -171,7 +136,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+
+import { ref, computed } from 'vue'
 
 // Simula el usuario logueado
 const usuarioLogueado = ref({
@@ -229,6 +195,30 @@ const guardarCliente = () => {
     console.log('Cliente registrado:', cliente.value)
     mostrarCliente.value = false
 }
+
+// Simulación de datos
+const usuarios = ref([
+    { id_usuario: 5554545, rol: 'Supervisor', nombre: 'Carlos', jefe: 'Alberto' },
+    { id_usuario: 1234567, rol: 'Administrador', nombre: 'Laura', jefe: '-' },
+    { id_usuario: 9876543, rol: 'Trabajador', nombre: 'Julián', jefe: 'Carlos' },
+    { id_usuario: 1112223, rol: 'Supervisor', nombre: 'Paola', jefe: 'Alberto' }
+])
+
+const filtroCedula = ref('')
+const filtroCargo = ref('')
+
+// Filtro combinado
+const usuariosFiltrados = computed(() => {
+    return usuarios.value.filter(usuario => {
+        const coincideCedula = usuario.id_usuario
+            .toString()
+            .includes(filtroCedula.value.trim())
+        const coincideCargo =
+            filtroCargo.value === '' ||
+            usuario.rol.toLowerCase() === filtroCargo.value.toLowerCase()
+        return coincideCedula && coincideCargo
+    })
+})
 </script>
 
 <style scoped>
