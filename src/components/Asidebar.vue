@@ -348,7 +348,7 @@ aside .sidebar .mi-enlace:hover span {
 
     aside .sidebar .mi-enlace {
         width: 100%;
-        height: 3.4rem;
+        height: 3.9rem;
     }
 
     aside .sidebar .mi-enlace:last-child {

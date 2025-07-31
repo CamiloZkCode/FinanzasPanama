@@ -31,7 +31,7 @@
     --border-radius-2: 0.8rem;
     --border-radius-3: 1.2rem;
 
-    --card-padding: 1.8rem;
+    --card-padding: 1rem;
     --padding-1: 1.2rem;
     --box-shadow: 0 2rem 3rem var(--color-light);
 }
