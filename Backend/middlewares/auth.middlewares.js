@@ -2,25 +2,44 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 function verificarToken(req, res, next) {
-  const token = req.headers['authorization'];
-  if (!token) return res.status(403).json({ message: 'Token requerido' });
-
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // 1. Obtener el encabezado de autorización de manera segura
+    const authHeader = req.header('Authorization') || req.header('authorization');
+    
+    // 2. Verificar si existe el encabezado
+    if (!authHeader) {
+      return res.status(401).json({ message: 'Acceso denegado. Token no proporcionado.' });
+    }
+
+    // 3. Extraer el token del encabezado
+    const receivedToken = authHeader.startsWith('Bearer ') 
+      ? authHeader.substring(7) 
+      : authHeader;
+
+    // 4. Verificar el token
+    const decoded = jwt.verify(receivedToken, process.env.JWT_SECRET);
     req.user = decoded;
     next();
-  } catch (err) {
-    return res.status(401).json({ message: 'Token inválido' });
+  } catch (error) {
+    console.error('Error en verificación de token:', error.message);
+    return res.status(401).json({ 
+      message: 'Token inválido o expirado',
+      error: error.message 
+    });
   }
 }
 
-function verificarRol(rolPermitido) {
+function verificarRoles(...rolesPermitidos) {
   return (req, res, next) => {
-    if (req.user.rol !== rolPermitido) {
-      return res.status(403).json({ message: 'Acceso denegado' });
+    if (!req.user?.rol) {
+      return res.status(403).json({ message: 'Información de rol no disponible' });
+    }
+    
+    if (!rolesPermitidos.includes(req.user.rol)) {
+      return res.status(403).json({ message: 'No tienes permisos para esta acción' });
     }
     next();
   };
 }
 
-module.exports = { verificarToken, verificarRol };
+module.exports = { verificarToken, verificarRoles };
