@@ -317,7 +317,7 @@ b {
 /*==Tabla==*/
 
 .tabla-scrollable {
-    max-height: 50vh;
+    max-height: 60vh;
     overflow-y: auto;
     overflow-x: auto;
     white-space: nowrap;
@@ -375,14 +375,6 @@ table tbody tr td.estado {
     border-radius: var(--card-border-radius)
 }
 
-table tbody tr td.estado1 {
-    background: var(--color-peligro);
-    color: var(--color-blanco);
-    border-radius: var(--card-border-radius)
-}
-
-
-
 .tabla-inicio .mi-enlace {
     text-align: center;
     display: block;
@@ -401,6 +393,7 @@ table tbody tr td.estado1 {
 }
 
 .contador-tarjetas .tarjetas-cobradas {
+    width: 100%;
     background-color: var(--primer-color);
     color: var(--color-blanco);
     padding: 0.5rem 1rem;
@@ -410,6 +403,7 @@ table tbody tr td.estado1 {
 }
 
 .contador-tarjetas .valor-cobrado {
+    width: 100%;
     background-color: var(--color-aprobado);
     color: var(--color-blanco);
     padding: 0.5rem 1rem;
@@ -442,6 +436,10 @@ table tbody tr td.estado1 {
 
     .filtro-cedula {
         width: 18rem;
+    }
+    
+    .tabla-scrollable{
+        height: 50vh;
     }
 
     /*==========TABLA==========*/
