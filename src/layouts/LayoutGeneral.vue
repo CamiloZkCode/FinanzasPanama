@@ -3,7 +3,6 @@
     <Asidebar />
     <main>
     <router-view />
-    <ListadoInicio />
     </main> 
     <div class="right">
         <BarraLogin />
@@ -14,7 +13,6 @@
 
 <script setup>
 import Asidebar from '../components/Asidebar.vue'
-import ListadoInicio from '../components/TarjetasInicio.vue';  
 import BarraLogin from '../components/BarraLogin.vue';
 
 

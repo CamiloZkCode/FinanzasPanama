@@ -261,9 +261,9 @@ button {
     align-items: center;
     justify-content: center;
     gap: 0.4rem;
-    padding: 0.5rem 0.9rem;
-    font-size: 0.9rem;
-    background: var(--color-oscuro);
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    background: var(--primer-color);
     color: var(--color-blanco);
     border: none;
     border-radius: 0.4rem;

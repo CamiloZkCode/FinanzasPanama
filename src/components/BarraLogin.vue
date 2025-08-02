@@ -191,12 +191,10 @@ b {
     .top .theme-toggle {
         width: 4.4rem;
         position: absolute;
-        left: 66%;
+        left: 40%;
     }
 
-    .perfil .info {
-        display: none;
-    }
+
 
     .top button {
         display: inline-block;

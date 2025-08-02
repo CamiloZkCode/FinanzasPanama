@@ -1,18 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
-// Layouts
-import AsidebarLayout from '@/layouts/AsidebarLayout.vue'
-import GestionLayout from '@/layouts/GestionLayout.vue'
-import AnalisisLayout from '@/layouts/AnalisisLayout.vue'
-import PoliticasLayout from '../layouts/PoliticasLayout.vue'
+// Layout
+import LayoutGeneral from '@/layouts/LayoutGeneral.vue'
 
 // Vistas
 import Login from '@/views/Login.vue'
 import Inicio from '@/views/Inicio.vue'
 import GestionUsuarios from '@/views/GestionUsuarios.vue'
-import Analisis from '@/views/Analisis.vue'
-import Politicas from '../views/Politicas.vue'
+import CreditoCliente from '@/views/CreditoCliente.vue'
+import CreditoFuncionario from '@/views/CreditoFuncionario.vue'
+import InformeGastos from '@/views/InformeGastos.vue'
+import InformeIngresos from '@/views/Ingresos.vue'
+import Caja from '@/views/Caja.vue'
+import Politicas from '@/views/Politicas.vue'
 
 const routes = [
   {
@@ -22,27 +23,67 @@ const routes = [
   },
   {
     path: '/inicio',
-    component: AsidebarLayout,
+    component: LayoutGeneral,
     meta: { requiereAuth: true },
-    children: [{ path: '', name: 'Inicio', component: Inicio }]
+    children: [
+      { path: '', name: 'Inicio', component: Inicio }
+    ]
   },
   {
     path: '/usuarios',
-    component: GestionLayout,
+    component: LayoutGeneral,
     meta: { requiereAuth: true },
-    children: [{ path: '', name: 'GestionUsuarios', component: GestionUsuarios }]
+    children: [
+      { path: '', name: 'GestionUsuarios', component: GestionUsuarios }
+    ]
   },
   {
-    path: '/Caja',
-    component: AnalisisLayout,
+    path: '/credito-cliente',
+    component: LayoutGeneral,
     meta: { requiereAuth: true },
-    children: [{ path: '', name: 'Analisis', component: Analisis }]
+    children: [
+      { path: '', name: 'CreditoCliente', component: CreditoCliente }
+    ]
   },
   {
-    path: '/Politicas',
-    component: PoliticasLayout,
+    path: '/credito-funcionario',
+    component: LayoutGeneral,
     meta: { requiereAuth: true },
-    children: [{ path: '', name: 'Politicas', component: Politicas }]
+    children: [
+      { path: '', name: 'CreditoFuncionario', component: CreditoFuncionario }
+    ]
+  },
+  {
+    path: '/ingresos',
+    component: LayoutGeneral,
+    meta: { requiereAuth: true },
+    children: [
+      { path: '', name: 'InformeIngresos', component: InformeIngresos }
+    ]
+  },
+  {
+    path: '/gastos',
+    component: LayoutGeneral,
+    meta: { requiereAuth: true },
+    children: [
+      { path: '', name: 'InformeGastos', component: InformeGastos }
+    ]
+  },
+  {
+    path: '/caja',
+    component: LayoutGeneral,
+    meta: { requiereAuth: true },
+    children: [
+      { path: '', name: 'Caja', component: Caja }
+    ]
+  },
+  {
+    path: '/politicas',
+    component: LayoutGeneral,
+    meta: { requiereAuth: true },
+    children: [
+      { path: '', name: 'Politicas', component: Politicas }
+    ]
   }
 ]
 

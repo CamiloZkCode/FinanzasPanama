@@ -1,9 +1,13 @@
 <template>
-    
+    <TarjetasInicio />
 </template>
 
+
+<script setup>
+import TarjetasInicio from '../components/TarjetasInicio.vue';
+
+</script>
 <style scoped>
-/*===== Estilo Inicio======*/
 
 .date {
     display: inline-block;

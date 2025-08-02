@@ -28,21 +28,21 @@
             </router-link>
 
 
-            <router-link to="/" class="mi-enlace" active-class="active">
+            <router-link to="/credito-cliente" class="mi-enlace" active-class="active">
                 <span class="material-symbols-outlined">
                     payment_arrow_down
                 </span>
                 <h3>Credito Cliente</h3>
             </router-link>
 
-            <router-link to="/" class="mi-enlace" active-class="active">
+            <router-link to="/credito-funcionario" class="mi-enlace" active-class="active">
                 <span class="material-symbols-outlined">
                     payments
                 </span>
                 <h3>Credito Funcionario</h3>
             </router-link>
 
-            <router-link to="/" class="mi-enlace" active-class="active">
+            <router-link to="/ingresos" class="mi-enlace" active-class="active">
                 <span class="material-symbols-outlined">
                     checkbook
                 </span>
@@ -50,14 +50,14 @@
             </router-link>
 
 
-            <router-link to="/" class="mi-enlace" active-class="active">
+            <router-link to="/gastos" class="mi-enlace" active-class="active">
                 <span class="material-symbols-outlined">
                     request_quote
                 </span>
                 <h3>informe Gastos</h3>
             </router-link>
 
-            <router-link to="/Caja" class="mi-enlace" active-class="active">
+            <router-link to="/caja" class="mi-enlace" active-class="active">
                 <span class="material-symbols-outlined">
                     point_of_sale
                 </span>
@@ -71,7 +71,7 @@
             </a>
 
 
-            <router-link to="/Politicas" class="mi-enlace" active-class="active">
+            <router-link to="/politicas" class="mi-enlace" active-class="active">
                 <span class="material-symbols-outlined">
                     info
                 </span>
