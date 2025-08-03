@@ -6,10 +6,6 @@
                 <span class="material-symbols-outlined">assignment_ind</span>
             </button>
 
-            <button @click="mostrarCliente = true">
-                Crear Cliente
-                <span class="material-symbols-outlined">person_add</span>
-            </button>
         </div>
 
         <!-- Modal: Crear Usuario -->
@@ -17,72 +13,19 @@
         <div v-if="mostrarUsuario" class="modal-overlay">
             <div class="modal-content">
                 <span class="material-symbols-outlined close-icon" @click="mostrarUsuario = false">close</span>
-                <h2>Registrar Usuario</h2>
+
+                <h2>Registrar Trabajador</h2>
 
                 <form @submit.prevent="guardarUsuario">
                     <input v-model="usuario.id_usuario" type="number" placeholder="Cédula" required />
-                    <input v-model="usuario.nombre" placeholder="Nombre de usuario" required />
+                    <input v-model="usuario.nombre" placeholder="Nombre" required />
                     <input v-model="usuario.correo" type="email" placeholder="Correo" required />
                     <input v-model="usuario.telefono" placeholder="Teléfono" required />
 
-                    <!-- Selección de rol según usuario logueado -->
-                    <select v-model="usuario.id_rol" required>
-                        <option disabled value="">Seleccione un rol</option>
-                        <option v-if="usuarioLogueado.id_rol === 1" value="2">Supervisor</option>
-                        <option value="3">Trabajador</option>
-                    </select>
-
-                    <!-- Si el logueado es admin y está creando trabajador: debe seleccionar supervisor -->
-                    <select v-if="usuarioLogueado.id_rol === 1 && usuario.id_rol == 3" v-model="usuario.id_supervisor"
-                        required>
-                        <option disabled value="">Seleccione un supervisor</option>
-                        <option v-for="sup in supervisores" :key="sup.id" :value="sup.id">{{ sup.nombre }}</option>
-                    </select>
-
-                    <button type="submit">Guardar Usuario</button>
+                    <button type="submit">Guardar</button>
                 </form>
             </div>
         </div>
-
-
-        <!-- Modal Cliente -->
-        <div v-if="mostrarCliente" class="modal-overlay">
-            <div class="modal-content">
-                <span class="material-symbols-outlined close-icon" @click="mostrarCliente = false">close</span>
-                <h2>Registrar Cliente</h2>
-                <form @submit.prevent="guardarCliente" enctype="multipart/form-data">
-                    <input v-model="cliente.documento" type="number" placeholder="Documento" required />
-                    <input v-model="cliente.nombre" placeholder="Nombre" required />
-                    <input v-model="cliente.apellido" placeholder="Apellido" required />
-                    <input v-model="cliente.direccion_casa" placeholder="Dirección casa" />
-                    <input v-model="cliente.direccion_trabajo" placeholder="Dirección trabajo" />
-                    <input v-model="cliente.telefono" placeholder="Teléfono" />
-                    <input v-model="cliente.ocupacion" placeholder="Ocupación" />
-                    <input v-model="cliente.referencia" placeholder="Referencia" />
-
-                    <label>Selecciona la Ruta</label>
-                    <select v-model="cliente.id_ruta">
-                        <option disabled value="">Seleccione una ruta</option>
-                        <option v-for="ruta in rutas" :key="ruta.id" :value="ruta.id">{{ ruta.nombre }}</option>
-                    </select>
-
-                    <!-- Archivos -->
-                    <label>Foto de la cédula:</label>
-                    <input type="file" @change="onFileChange($event, 'cedula')" accept="image/*,application/pdf" />
-
-                    <label>Foto del negocio:</label>
-                    <input type="file" @change="onFileChange($event, 'negocio')" accept="image/*,application/pdf" />
-
-                    <label>Documento del negocio:</label>
-                    <input type="file" @change="onFileChange($event, 'documentonegocio')"
-                        accept="image/*,application/pdf" />
-                    <button type="submit">Guardar Cliente</button>
-                </form>
-            </div>
-        </div>
-
-
-
 
         <div class="contenedor-tabla">
             <div class="filtros">
@@ -91,15 +34,6 @@
                     <span class="material-symbols-outlined">search</span>
                 </div>
 
-                <div class="filtro-cargo">
-                    <label class="lblcargo">Cargo:</label>
-                    <select v-model="filtroCargo">
-                        <option value="">Todos los cargos</option>
-                        <option value="Administrador">Administrador</option>
-                        <option value="Supervisor">Supervisor</option>
-                        <option value="Trabajador">Trabajador</option>
-                    </select>
-                </div>
             </div>
 
             <div class="tabla-scrollable">
@@ -107,10 +41,8 @@
                     <thead>
                         <tr>
                             <th>N°CC</th>
-                            <th>Cargo</th>
                             <th>Nombre</th>
-                            <th>Jefe</th>
-                            <th></th>
+                            <th>Telefono</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -136,99 +68,45 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { registrarUsuario, obtenerSupervisores } from '@/services/usuario'
 
-// Simula el usuario logueado
-const usuarioLogueado = ref({
-  id_usuario: 1065569071,
-  id_rol: 1 // 1 = Admin, 2 = Supervisor, 3 = Trabajador
-})
+import { ref, computed } from 'vue'
 
-// Control de visibilidad de modales
 const mostrarUsuario = ref(false)
-const mostrarCliente = ref(false)
 
-// Datos del usuario a crear
+// Modelo del usuario
 const usuario = ref({
-  id_usuario: '',
-  nombre: '',
-  correo: '',
-  telefono: '',
-  id_rol: '',
-  id_administrador: null,
-  id_supervisor: null,
+    id_usuario: '',
+    nombre: '',
+    username: '',
+    contraseña: ''
 })
 
-// Datos del cliente a crear
-const cliente = ref({
-  nombre: '',
-  direccion: '',
-  telefono: ''
-})
-
-// Supervisores obtenidos de la API
-const supervisores = ref([])
-
-const guardarUsuario = async () => {
-  try {
-    if (usuarioLogueado.value.id_rol === 1) {
-      if (usuario.value.id_rol == 2) {
-        usuario.value.id_administrador = usuarioLogueado.value.id_usuario
-        usuario.value.id_supervisor = null
-      } else if (usuario.value.id_rol == 3) {
-        usuario.value.id_administrador = usuarioLogueado.value.id_usuario
-        // id_supervisor viene del select
-      }
-    } else if (usuarioLogueado.value.id_rol === 2) {
-      usuario.value.id_administrador = null
-      usuario.value.id_supervisor = usuarioLogueado.value.id_usuario
-    }
-
-    await registrarUsuario(usuario.value)
-    alert('Usuario registrado con éxito')
+// Función para guardar usuario (aquí harías la petición a backend)
+const guardarUsuario = () => {
+    console.log('Usuario registrado:', { ...usuario.value })
     mostrarUsuario.value = false
-  } catch (error) {
-    alert(`Error al registrar usuario: ${error.message || error}`)
-  }
+
 }
 
-const guardarCliente = () => {
-  console.log('Cliente registrado:', cliente.value)
-  mostrarCliente.value = false
-}
-
-const cargarSupervisores = async () => {
-  try {
-    supervisores.value = await obtenerSupervisores()
-  } catch (error) {
-    console.error('Error al obtener supervisores:', error)
-  }
-}
-
-onMounted(() => {
-  cargarSupervisores()
-})
-
-// Simulación de datos
+// Lista simulada de usuarios
 const usuarios = ref([
-  { id_usuario: 5554545, rol: 'Supervisor', nombre: 'Carlos', jefe: 'Alberto' },
-  { id_usuario: 1234567, rol: 'Administrador', nombre: 'Laura', jefe: '-' },
-  { id_usuario: 9876543, rol: 'Trabajador', nombre: 'Julián', jefe: 'Carlos' },
-  { id_usuario: 1112223, rol: 'Supervisor', nombre: 'Paola', jefe: 'Alberto' }
+    { id_usuario: 5554545, rol: 'Supervisor', nombre: 'Carlos', jefe: 'Alberto' },
+    { id_usuario: 1234567, rol: 'Administrador', nombre: 'Laura', jefe: '-' },
+    { id_usuario: 9876543, rol: 'Trabajador', nombre: 'Julián', jefe: 'Carlos' },
+    { id_usuario: 1112223, rol: 'Supervisor', nombre: 'Paola', jefe: 'Alberto' }
 ])
 
+// Filtros
 const filtroCedula = ref('')
 const filtroCargo = ref('')
 
+// Filtro dinámico
 const usuariosFiltrados = computed(() => {
-  return usuarios.value.filter(usuario => {
-    const coincideCedula = usuario.id_usuario.toString().includes(filtroCedula.value.trim())
-    const coincideCargo =
-      filtroCargo.value === '' ||
-      usuario.rol.toLowerCase() === filtroCargo.value.toLowerCase()
-    return coincideCedula && coincideCargo
-  })
+    return usuarios.value.filter(usuario => {
+        const coincideCedula = usuario.id_usuario.toString().includes(filtroCedula.value.trim())
+        const coincideCargo = filtroCargo.value === '' || usuario.rol.toLowerCase() === filtroCargo.value.toLowerCase()
+        return coincideCedula && coincideCargo
+    })
 })
 </script>
 
