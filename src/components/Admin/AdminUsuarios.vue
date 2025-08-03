@@ -113,12 +113,13 @@
 
 import { ref, computed,onMounted } from 'vue'
 import { registrarUsuario, obtenerSupervisores } from '@/services/usuario'
+import { useAuthStore } from '@/stores/auth'
 
-// Simula el usuario logueado
-const usuarioLogueado = ref({
-    id_usuario: 1065569071,
-    id_rol: 1 // 1 = Admin, 2 = Supervisor, 3 = Trabajador
-})
+//Recupera id administrador 
+const authStore = useAuthStore()
+const usuarioLogueado = computed(() => authStore.user)
+
+
 
 // Control de visibilidad de modales
 const mostrarUsuario = ref(false)
