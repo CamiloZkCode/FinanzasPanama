@@ -143,6 +143,7 @@ const supervisores = ref([
 ])
 
 
+// Función para guardar usuario (aquí accedes al la url gestionada por axios)
 const guardarUsuario = async () => {
   try {
     if (usuarioLogueado.value.id_rol === 1) {
