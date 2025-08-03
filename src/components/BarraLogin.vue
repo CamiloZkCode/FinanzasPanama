@@ -1,6 +1,6 @@
 <template>
     <div class="top">
-        <button id="menu-btn" @click="abrirMenu" >
+        <button id="menu-btn" @click="abrirMenu">
             <span class="material-symbols-outlined">
                 menu
             </span>
@@ -15,8 +15,8 @@
         </div>
         <div class="perfil">
             <div class="info">
-                <p>Hey, <b>Camilo</b></p>
-                <small class="texto-muted">Admin</small>
+                <p>Hey, <b>{{ authStore.user?.nombre || 'Usuario' }}</b></p>
+                <small class="texto-muted">{{ authStore.user?.rol || 'Sin rol' }}</small>
             </div>
             <div class="perfil-foto">
                 <img src="@/assets/img/logo.png" alt="">
@@ -29,16 +29,18 @@
 <script setup>
 import { useMenuStore } from '@/stores/menu'
 import { useThemeStore } from '@/stores/theme'
-
+import { useAuthStore } from '@/stores/auth' 
 
 const menuStore = useMenuStore()
-const abrirMenu = () => { menuStore.abrir()
-};
-const themeStore = useThemeStore();
+const themeStore = useThemeStore()
+const authStore = useAuthStore() // 
+
+const abrirMenu = () => {
+  menuStore.abrir()
+}
 </script>
 
 <style scoped>
-
 .material-symbols-outlined {
     font-variation-settings:
         'FILL' 1,
@@ -160,7 +162,7 @@ b {
     background: var(--primer-color);
     color: var(--color-blanco);
     border-radius: var(--border-radius-1);
-    transform: scale(1.1); 
+    transform: scale(1.1);
 
 }
 
@@ -200,12 +202,12 @@ b {
         display: inline-block;
         background: transparent;
         cursor: pointer;
-        color:var(--color-oscuro);
+        color: var(--color-oscuro);
         position: absolute;
         left: 1rem;
     }
 
-    .top button span{
+    .top button span {
         font-size: 2rem;
     }
 }
