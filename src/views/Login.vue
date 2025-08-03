@@ -46,13 +46,24 @@ const auth = useAuthStore()
 const username = ref('')
 const password = ref('')
 const error = ref('')
+const loading = ref(false)
 
-const handleLogin = () => {
-  if (username.value && password.value) {
-    auth.login()
+const handleLogin = async () => {
+  try {
+    if (!username.value || !password.value) {
+      error.value = 'Por favor ingrese usuario y contraseña'
+      return
+    }
+    
+    loading.value = true
+    error.value = ''
+    
+    await auth.login(username.value, password.value)
     router.push('/inicio')
-  } else {
-    error.value = 'Por favor, ingrese las credenciales'
+  } catch (err) {
+    error.value = err.message || 'Error al iniciar sesión'
+  } finally {
+    loading.value = false
   }
 }
 

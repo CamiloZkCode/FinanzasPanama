@@ -136,13 +136,13 @@
 </template>
 
 <script setup>
-
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { registrarUsuario, obtenerSupervisores } from '@/services/usuario'
 
 // Simula el usuario logueado
 const usuarioLogueado = ref({
-    id_usuario: 1,
-    id_rol: 1 // 1 = Admin, 2 = Supervisor, 3 = Trabajador
+  id_usuario: 1065569071,
+  id_rol: 1 // 1 = Admin, 2 = Supervisor, 3 = Trabajador
 })
 
 // Control de visibilidad de modales
@@ -151,73 +151,84 @@ const mostrarCliente = ref(false)
 
 // Datos del usuario a crear
 const usuario = ref({
-    id_usuario: '',
-    nombre: '',
-    correo: '',
-    telefono: '',
-    id_rol: '',
-    id_administrador: null,
-    id_supervisor: null,
+  id_usuario: '',
+  nombre: '',
+  correo: '',
+  telefono: '',
+  id_rol: '',
+  id_administrador: null,
+  id_supervisor: null,
 })
 
 // Datos del cliente a crear
 const cliente = ref({
-    nombre: '',
-    direccion: '',
-    telefono: ''
+  nombre: '',
+  direccion: '',
+  telefono: ''
 })
 
-// Lista ficticia de supervisores
-const supervisores = ref([
-    { id: 101, nombre: 'Supervisor A' },
-    { id: 102, nombre: 'Supervisor B' },
-])
+// Supervisores obtenidos de la API
+const supervisores = ref([])
 
-const guardarUsuario = () => {
+const guardarUsuario = async () => {
+  try {
     if (usuarioLogueado.value.id_rol === 1) {
-        if (usuario.value.id_rol == 2) {
-            usuario.value.id_administrador = usuarioLogueado.value.id_usuario
-            usuario.value.id_supervisor = null
-        } else if (usuario.value.id_rol == 3) {
-            usuario.value.id_administrador = usuarioLogueado.value.id_usuario
-            // id_supervisor ya viene del select
-        }
+      if (usuario.value.id_rol == 2) {
+        usuario.value.id_administrador = usuarioLogueado.value.id_usuario
+        usuario.value.id_supervisor = null
+      } else if (usuario.value.id_rol == 3) {
+        usuario.value.id_administrador = usuarioLogueado.value.id_usuario
+        // id_supervisor viene del select
+      }
     } else if (usuarioLogueado.value.id_rol === 2) {
-        usuario.value.id_administrador = null
-        usuario.value.id_supervisor = usuarioLogueado.value.id_usuario
+      usuario.value.id_administrador = null
+      usuario.value.id_supervisor = usuarioLogueado.value.id_usuario
     }
 
-    console.log('Usuario registrado:', { ...usuario.value })
+    await registrarUsuario(usuario.value)
+    alert('Usuario registrado con éxito')
     mostrarUsuario.value = false
+  } catch (error) {
+    alert(`Error al registrar usuario: ${error.message || error}`)
+  }
 }
 
 const guardarCliente = () => {
-    console.log('Cliente registrado:', cliente.value)
-    mostrarCliente.value = false
+  console.log('Cliente registrado:', cliente.value)
+  mostrarCliente.value = false
 }
+
+const cargarSupervisores = async () => {
+  try {
+    supervisores.value = await obtenerSupervisores()
+  } catch (error) {
+    console.error('Error al obtener supervisores:', error)
+  }
+}
+
+onMounted(() => {
+  cargarSupervisores()
+})
 
 // Simulación de datos
 const usuarios = ref([
-    { id_usuario: 5554545, rol: 'Supervisor', nombre: 'Carlos', jefe: 'Alberto' },
-    { id_usuario: 1234567, rol: 'Administrador', nombre: 'Laura', jefe: '-' },
-    { id_usuario: 9876543, rol: 'Trabajador', nombre: 'Julián', jefe: 'Carlos' },
-    { id_usuario: 1112223, rol: 'Supervisor', nombre: 'Paola', jefe: 'Alberto' }
+  { id_usuario: 5554545, rol: 'Supervisor', nombre: 'Carlos', jefe: 'Alberto' },
+  { id_usuario: 1234567, rol: 'Administrador', nombre: 'Laura', jefe: '-' },
+  { id_usuario: 9876543, rol: 'Trabajador', nombre: 'Julián', jefe: 'Carlos' },
+  { id_usuario: 1112223, rol: 'Supervisor', nombre: 'Paola', jefe: 'Alberto' }
 ])
 
 const filtroCedula = ref('')
 const filtroCargo = ref('')
 
-// Filtro combinado
 const usuariosFiltrados = computed(() => {
-    return usuarios.value.filter(usuario => {
-        const coincideCedula = usuario.id_usuario
-            .toString()
-            .includes(filtroCedula.value.trim())
-        const coincideCargo =
-            filtroCargo.value === '' ||
-            usuario.rol.toLowerCase() === filtroCargo.value.toLowerCase()
-        return coincideCedula && coincideCargo
-    })
+  return usuarios.value.filter(usuario => {
+    const coincideCedula = usuario.id_usuario.toString().includes(filtroCedula.value.trim())
+    const coincideCargo =
+      filtroCargo.value === '' ||
+      usuario.rol.toLowerCase() === filtroCargo.value.toLowerCase()
+    return coincideCedula && coincideCargo
+  })
 })
 </script>
 

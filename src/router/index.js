@@ -92,20 +92,30 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const auth = useAuthStore()
 
-  // sincronizar con localStorage si recargó
   if (!auth.isAuthenticated) {
     auth.isAuthenticated = localStorage.getItem('isAuthenticated') === 'true'
+    if (auth.isAuthenticated) {
+      auth.user = JSON.parse(localStorage.getItem('user') || 'null')
+    }
   }
 
   if (to.name === 'Login' && auth.isAuthenticated) {
     return next('/inicio')
   }
 
-  if (to.meta.requiereAuth && !auth.isAuthenticated) {
-    return next({ name: 'Login' })
+  if (to.meta.requiresAuth) {
+    if (!auth.isAuthenticated) {
+      return next({ name: 'Login' })
+    }
+    
+    // Verificar si el token sigue válido
+    const isValid = await auth.checkAuth()
+    if (!isValid) {
+      return next({ name: 'Login' })
+    }
   }
 
   next()

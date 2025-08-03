@@ -14,8 +14,15 @@ async function getRolById(id_rol) {
   return rows[0]?.rol;
 }
 
+
+const obtenerSupervisores = async () => {
+  const [rows] = await db.query('SELECT id_usuario AS id, nombre FROM usuarios WHERE id_rol = 2');
+  return rows;
+};
+
 module.exports = {
   getAllUsuarios,
   findUserByUsername,
   getRolById,
+  obtenerSupervisores
 };
