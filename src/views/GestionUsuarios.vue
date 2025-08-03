@@ -1,10 +1,13 @@
 <template>
     <h1>Gestion Usuarios</h1>
-    <TablaUsuarios />
+    <AdminTablaUsuarios />
+    <SupTablaUsuarios />
 </template>
 
 
 
 <script setup>
-import TablaUsuarios from '../components/GestionUsuarios/TablaUsuarios.vue';
+import AdminTablaUsuarios from '../components/Admin/AdminUsuarios.vue'
+import SupTablaUsuarios from '../components/Supervisor/SupUsuarios.vue'
+
 </script>

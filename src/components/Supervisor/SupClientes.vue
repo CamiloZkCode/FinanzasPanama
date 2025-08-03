@@ -1,47 +1,10 @@
 <template>
     <div>
         <div class="contenedor-botones">
-            <button @click="mostrarUsuario = true">
-                Crear Usuario
-                <span class="material-symbols-outlined">assignment_ind</span>
-            </button>
-
             <button @click="mostrarCliente = true">
                 Crear Cliente
                 <span class="material-symbols-outlined">person_add</span>
             </button>
-        </div>
-
-        <!-- Modal: Crear Usuario -->
-        <!-- Modal Usuario -->
-        <div v-if="mostrarUsuario" class="modal-overlay">
-            <div class="modal-content">
-                <span class="material-symbols-outlined close-icon" @click="mostrarUsuario = false">close</span>
-                <h2>Registrar Usuario</h2>
-
-                <form @submit.prevent="guardarUsuario">
-                    <input v-model="usuario.id_usuario" type="number" placeholder="Cédula" required />
-                    <input v-model="usuario.nombre" placeholder="Nombre de usuario" required />
-                    <input v-model="usuario.correo" type="email" placeholder="Correo" required />
-                    <input v-model="usuario.telefono" placeholder="Teléfono" required />
-
-                    <!-- Selección de rol según usuario logueado -->
-                    <select v-model="usuario.id_rol" required>
-                        <option disabled value="">Seleccione un rol</option>
-                        <option v-if="usuarioLogueado.id_rol === 1" value="2">Supervisor</option>
-                        <option value="3">Trabajador</option>
-                    </select>
-
-                    <!-- Si el logueado es admin y está creando trabajador: debe seleccionar supervisor -->
-                    <select v-if="usuarioLogueado.id_rol === 1 && usuario.id_rol == 3" v-model="usuario.id_supervisor"
-                        required>
-                        <option disabled value="">Seleccione un supervisor</option>
-                        <option v-for="sup in supervisores" :key="sup.id" :value="sup.id">{{ sup.nombre }}</option>
-                    </select>
-
-                    <button type="submit">Guardar Usuario</button>
-                </form>
-            </div>
         </div>
 
 
@@ -89,16 +52,6 @@
                 <div class="filtro-cedula">
                     <input class="filtro-ced" type="text" placeholder="Buscar por cédula" v-model="filtroCedula" />
                     <span class="material-symbols-outlined">search</span>
-                </div>
-
-                <div class="filtro-cargo">
-                    <label class="lblcargo">Cargo:</label>
-                    <select v-model="filtroCargo">
-                        <option value="">Todos los cargos</option>
-                        <option value="Administrador">Administrador</option>
-                        <option value="Supervisor">Supervisor</option>
-                        <option value="Trabajador">Trabajador</option>
-                    </select>
                 </div>
             </div>
 
