@@ -43,21 +43,15 @@
                             <th>N°CC</th>
                             <th>Nombre</th>
                             <th>Telefono</th>
-                            <th></th>
+                            <th>Correo</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="usuario in usuariosFiltrados" :key="usuario.id_usuario">
                             <td>{{ usuario.id_usuario }}</td>
-                            <td>{{ usuario.rol }}</td>
                             <td>{{ usuario.nombre }}</td>
-                            <td>{{ usuario.jefe }}</td>
-                            <td>
-                                <span class="material-symbols-outlined delete">delete</span>
-                            </td>
-                            <td>
-                                <span class="material-symbols-outlined edit">edit</span>
-                            </td>
+                            <td>{{ usuario.telefono }}</td>
+                            <td>{{ usuario.correo }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -90,11 +84,28 @@ const guardarUsuario = () => {
 
 // Lista simulada de usuarios
 const usuarios = ref([
-    { id_usuario: 5554545, rol: 'Supervisor', nombre: 'Carlos', jefe: 'Alberto' },
-    { id_usuario: 1234567, rol: 'Administrador', nombre: 'Laura', jefe: '-' },
-    { id_usuario: 9876543, rol: 'Trabajador', nombre: 'Julián', jefe: 'Carlos' },
-    { id_usuario: 1112223, rol: 'Supervisor', nombre: 'Paola', jefe: 'Alberto' }
+    { id_usuario: 5554545, nombre: 'Carlos', jefe: 'Alberto', correo: 'carlos@example.com', telefono: '3001234567' },
+    { id_usuario: 1234567, nombre: 'Laura', jefe: '-', correo: 'laura@example.com', telefono: '3001234567' },
+    { id_usuario: 9876543, nombre: 'Julián', jefe: 'Carlos', correo: 'julian@example.com', telefono: '3001234567' },
+    { id_usuario: 1112223, nombre: 'Paola', jefe: 'Alberto', correo: 'paola@example.com', telefono: '3001234567' },
+    { id_usuario: 2223334, nombre: 'Diego', jefe: 'Laura', correo: 'diego@example.com', telefono: '3001234567' },
+    { id_usuario: 3334445, nombre: 'Sofía', jefe: 'Carlos', correo: 'sofia@example.com', telefono: '3001234567' },
+    { id_usuario: 4445556, nombre: 'Andrés', jefe: '-', correo: 'andres@example.com', telefono: '3001234567' },
+    { id_usuario: 5556667, nombre: 'Camila', jefe: 'Andrés', correo: 'camila@example.com', telefono: '3001234567' },
+    { id_usuario: 6667778, nombre: 'Luis', jefe: 'Camila', correo: 'luis@example.com', telefono: '3001234567' },
+    { id_usuario: 7778889, nombre: 'Ana', jefe: 'Carlos', correo: 'ana@example.com', telefono: '3001234567' },
+    { id_usuario: 8889990, nombre: 'Felipe', jefe: 'Paola', correo: 'felipe@example.com', telefono: '3001234567' },
+    { id_usuario: 9990001, nombre: 'Valentina', jefe: 'Andrés', correo: 'valentina@example.com', telefono: '3001234567' },
+    { id_usuario: 1110002, nombre: 'Esteban', jefe: 'Laura', correo: 'esteban@example.com', telefono: '3001234567' },
+    { id_usuario: 2221113, nombre: 'Daniela', jefe: 'Camila', correo: 'daniela@example.com', telefono: '3001234567' },
+    { id_usuario: 3332224, nombre: 'Sebastián', jefe: 'Julián', correo: 'sebastian@example.com', telefono: '3001234567' },
+    { id_usuario: 4443335, nombre: 'Mariana', jefe: 'Esteban', correo: 'mariana@example.com', telefono: '3001234567' },
+    { id_usuario: 5554446, nombre: 'Manuel', jefe: 'Felipe', correo: 'manuel@example.com', telefono: '3001234567' },
+    { id_usuario: 6665557, nombre: 'Natalia', jefe: 'Laura', correo: 'natalia@example.com', telefono: '3001234567' },
+    { id_usuario: 7776668, nombre: 'Elena', jefe: 'Camila', correo: 'elena@example.com', telefono: '3001234567' },
+    { id_usuario: 8887779, nombre: 'Tomás', jefe: 'Carlos', correo: 'tomas@example.com', telefono: '3001234567' }
 ])
+
 
 // Filtros
 const filtroCedula = ref('')
@@ -281,6 +292,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 /*=====================Tabla============*/
 .tabla-scrollable {
+    max-height: 60vh;
     overflow-x: auto;
     white-space: nowrap;
     margin-top: 0.5rem;
@@ -405,6 +417,9 @@ table tbody tr:last-child td {
         width: 80%;
     }
 
+    .tabla-scrollable {
+        max-height: 45vh;
+    }
 
     .contenedor-tabla {
         position: relative;
@@ -412,13 +427,13 @@ table tbody tr:last-child td {
     }
 
     .contenedor-tabla .tabla-usuarios {
-        min-width: 150%;
+        min-width: 130%;
     }
 
     .contenedor-tabla table {
         width: 100%;
         margin-top: 1rem;
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
 
     .contenedor-tabla table span {

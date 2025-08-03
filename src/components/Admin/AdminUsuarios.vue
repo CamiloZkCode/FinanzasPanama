@@ -166,23 +166,28 @@ const toggleExpand = (id) => {
 
 // Simulación de datos
 const usuarios = ref([
-    {
-        id_usuario: 5554545, rol: 'Supervisor', nombre: 'Carlos', jefe: 'Alberto', correo: 'carlos@example.com',
-        telefono: '3001234567'
-    },
-    {
-        id_usuario: 1234567, rol: 'Administrador', nombre: 'Laura', jefe: '-', correo: 'carlos@example.com',
-        telefono: '3001234567'
-    },
-    {
-        id_usuario: 9876543, rol: 'Trabajador', nombre: 'Julián', jefe: 'Carlos', correo: 'carlos@example.com',
-        telefono: '3001234567'
-    },
-    {
-        id_usuario: 1112223, rol: 'Supervisor', nombre: 'Paola', jefe: 'Alberto', correo: 'carlos@example.com',
-        telefono: '3001234567'
-    }
+    { id_usuario: 1000001, rol: 'Administrador', nombre: 'Laura', jefe: '-', correo: 'laura@example.com', telefono: '3001111111' },
+    { id_usuario: 1000002, rol: 'Supervisor', nombre: 'Carlos', jefe: 'Laura', correo: 'carlos@example.com', telefono: '3001111112' },
+    { id_usuario: 1000003, rol: 'Trabajador', nombre: 'Julián', jefe: 'Carlos', correo: 'julian@example.com', telefono: '3001111113' },
+    { id_usuario: 1000004, rol: 'Supervisor', nombre: 'Paola', jefe: 'Laura', correo: 'paola@example.com', telefono: '3001111114' },
+    { id_usuario: 1000005, rol: 'Trabajador', nombre: 'Diego', jefe: 'Paola', correo: 'diego@example.com', telefono: '3001111115' },
+    { id_usuario: 1000006, rol: 'Trabajador', nombre: 'Ana', jefe: 'Carlos', correo: 'ana@example.com', telefono: '3001111116' },
+    { id_usuario: 1000007, rol: 'Supervisor', nombre: 'Camila', jefe: 'Laura', correo: 'camila@example.com', telefono: '3001111117' },
+    { id_usuario: 1000008, rol: 'Trabajador', nombre: 'Luis', jefe: 'Camila', correo: 'luis@example.com', telefono: '3001111118' },
+    { id_usuario: 1000009, rol: 'Trabajador', nombre: 'Sofía', jefe: 'Camila', correo: 'sofia@example.com', telefono: '3001111119' },
+    { id_usuario: 1000010, rol: 'Administrador', nombre: 'Andrés', jefe: '-', correo: 'andres@example.com', telefono: '3001111120' },
+    { id_usuario: 1000011, rol: 'Supervisor', nombre: 'Natalia', jefe: 'Andrés', correo: 'natalia@example.com', telefono: '3001111121' },
+    { id_usuario: 1000012, rol: 'Trabajador', nombre: 'Felipe', jefe: 'Natalia', correo: 'felipe@example.com', telefono: '3001111122' },
+    { id_usuario: 1000013, rol: 'Supervisor', nombre: 'Esteban', jefe: 'Laura', correo: 'esteban@example.com', telefono: '3001111123' },
+    { id_usuario: 1000014, rol: 'Trabajador', nombre: 'Mariana', jefe: 'Esteban', correo: 'mariana@example.com', telefono: '3001111124' },
+    { id_usuario: 1000015, rol: 'Trabajador', nombre: 'Valentina', jefe: 'Carlos', correo: 'valentina@example.com', telefono: '3001111125' },
+    { id_usuario: 1000016, rol: 'Supervisor', nombre: 'Ricardo', jefe: 'Andrés', correo: 'ricardo@example.com', telefono: '3001111126' },
+    { id_usuario: 1000017, rol: 'Trabajador', nombre: 'Daniela', jefe: 'Ricardo', correo: 'daniela@example.com', telefono: '3001111127' },
+    { id_usuario: 1000018, rol: 'Trabajador', nombre: 'Manuel', jefe: 'Esteban', correo: 'manuel@example.com', telefono: '3001111128' },
+    { id_usuario: 1000019, rol: 'Trabajador', nombre: 'Elena', jefe: 'Camila', correo: 'elena@example.com', telefono: '3001111129' },
+    { id_usuario: 1000020, rol: 'Trabajador', nombre: 'Sebastián', jefe: 'Natalia', correo: 'sebastian@example.com', telefono: '3001111130' }
 ])
+
 
 const filtroCedula = ref('')
 const filtroCargo = ref('')
@@ -372,6 +377,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 /*=====================Tabla============*/
 .tabla-scrollable {
+    max-height: 60vh;
     overflow-x: auto;
     white-space: nowrap;
     margin-top: 0.5rem;
@@ -431,7 +437,7 @@ table tbody tr:last-child td {
 }
 
 .fila-expandida {
-    background: var(--color-background);
+    background: var(--color-blanco);
 }
 
 .info-extra {
@@ -512,6 +518,10 @@ table tbody tr:last-child td {
         width: 80%;
     }
 
+    .tabla-scrollable {
+        max-height: 45vh;
+    }
+
 
     .contenedor-tabla {
         position: relative;
@@ -534,7 +544,6 @@ table tbody tr:last-child td {
     }
 
     .fila-expandida {
-        background-color: #f9f9f9;
         font-size: 0.9rem;
         overflow-x: auto;
         max-width: 100%;
@@ -542,7 +551,7 @@ table tbody tr:last-child td {
     }
 
     .fila-expandida .info-extra {
-        white-space:initial;
+        white-space: initial;
     }
 
 }
