@@ -111,11 +111,12 @@
 
 <script setup>
 
-import { ref, computed } from 'vue'
+import { ref, computed,onMounted } from 'vue'
+import { registrarUsuario, obtenerSupervisores } from '@/services/usuario'
 
 // Simula el usuario logueado
 const usuarioLogueado = ref({
-    id_usuario: 1,
+    id_usuario: 1065569071,
     id_rol: 1 // 1 = Admin, 2 = Supervisor, 3 = Trabajador
 })
 
@@ -140,22 +141,28 @@ const supervisores = ref([
     { id: 102, nombre: 'Supervisor B' },
 ])
 
-const guardarUsuario = () => {
+
+const guardarUsuario = async () => {
+  try {
     if (usuarioLogueado.value.id_rol === 1) {
-        if (usuario.value.id_rol == 2) {
-            usuario.value.id_administrador = usuarioLogueado.value.id_usuario
-            usuario.value.id_supervisor = null
-        } else if (usuario.value.id_rol == 3) {
-            usuario.value.id_administrador = usuarioLogueado.value.id_usuario
-            // id_supervisor ya viene del select
-        }
+      if (usuario.value.id_rol == 2) {
+        usuario.value.id_administrador = usuarioLogueado.value.id_usuario
+        usuario.value.id_supervisor = null
+      } else if (usuario.value.id_rol == 3) {
+        usuario.value.id_administrador = usuarioLogueado.value.id_usuario
+        // id_supervisor viene del select
+      }
     } else if (usuarioLogueado.value.id_rol === 2) {
-        usuario.value.id_administrador = null
-        usuario.value.id_supervisor = usuarioLogueado.value.id_usuario
+      usuario.value.id_administrador = null
+      usuario.value.id_supervisor = usuarioLogueado.value.id_usuario
     }
 
-    console.log('Usuario registrado:', { ...usuario.value })
+    await registrarUsuario(usuario.value)
+    alert('Usuario registrado con éxito')
     mostrarUsuario.value = false
+  } catch (error) {
+    alert(`Error al registrar usuario: ${error.message || error}`)
+  }
 }
 
 const usuarioExpandido = ref(null)
@@ -163,6 +170,18 @@ const usuarioExpandido = ref(null)
 const toggleExpand = (id) => {
     usuarioExpandido.value = usuarioExpandido.value === id ? null : id
 }
+
+const cargarSupervisores = async () => {
+  try {
+    supervisores.value = await obtenerSupervisores()
+  } catch (error) {
+    console.error('Error al obtener supervisores:', error)
+  }
+}
+
+onMounted(() => {
+  cargarSupervisores()
+})
 
 // Simulación de datos
 const usuarios = ref([
