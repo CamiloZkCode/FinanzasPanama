@@ -5,7 +5,6 @@
                 Crear Usuario
                 <span class="material-symbols-outlined">assignment_ind</span>
             </button>
-
         </div>
 
         <!-- Modal: Crear Usuario -->
@@ -33,7 +32,6 @@
                     <input class="filtro-ced" type="text" placeholder="Buscar por cédula" v-model="filtroCedula" />
                     <span class="material-symbols-outlined">search</span>
                 </div>
-
             </div>
 
             <div class="tabla-scrollable">
@@ -47,12 +45,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="usuario in usuariosFiltrados" :key="usuario.id_usuario">
-                            <td>{{ usuario.id_usuario }}</td>
-                            <td>{{ usuario.nombre }}</td>
-                            <td>{{ usuario.telefono }}</td>
-                            <td>{{ usuario.correo }}</td>
-                        </tr>
+                        <template v-for="usuario in usuariosFiltrados" :key="usuario.id_usuario">
+                            <tr>
+                                <td>{{ usuario.id_usuario }}</td>
+                                <td>{{ usuario.nombre }}</td>
+                                <td>{{ usuario.telefono }}</td>
+                                <td>{{ usuario.correo }}</td>
+                            </tr>
+                        </template>
                     </tbody>
                 </table>
             </div>
@@ -231,6 +231,8 @@ input[type="number"]::-webkit-inner-spin-button {
     margin-top: 1.0rem;
 }
 
+/*===========Filtro=================*/
+
 .filtros {
     display: flex;
     justify-content: space-between;
@@ -262,32 +264,11 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .filtro-cedula .material-symbols-outlined {
     margin-left: 0.5rem;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     color: var(--color-oscuro);
     cursor: pointer;
 }
 
-.filtro-cargo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.filtro-cargo .lblcargo {
-    font-size: 1rem;
-    margin-right: 1rem;
-}
-
-.filtro-cargo select {
-    width: 16rem;
-    padding: 0.8rem;
-    border-radius: 0.4rem;
-    border: 1px solid #ccc;
-    font-size: 0.9rem;
-    margin: 0;
-    background: var(--color-blanco);
-    color: var(--color-oscuro);
-}
 
 
 /*=====================Tabla============*/
@@ -335,16 +316,14 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 table tbody td {
-    height: 2rem;
+    height: 3rem;
     border-bottom: 1px solid var(--color-light);
     color: var(--color-dark-variant);
 }
 
-
 table tbody tr:last-child td {
     border: none;
 }
-
 
 
 /*======================Media Querry====================*/
@@ -401,25 +380,10 @@ table tbody tr:last-child td {
         gap: 1rem;
     }
 
-    .filtro-cedula {
-        width: 80%;
-        max-width: 100%;
-    }
-
-    .filtro-cargo select {
-        width: 100%;
-        max-width: 100%;
-    }
-
-    .filtro-cargo {
-        flex-direction: column;
-        align-items: flex-start;
-        width: 80%;
-    }
-
     .tabla-scrollable {
-        max-height: 45vh;
+        max-height: 50vh;
     }
+
 
     .contenedor-tabla {
         position: relative;
@@ -427,20 +391,20 @@ table tbody tr:last-child td {
     }
 
     .contenedor-tabla .tabla-usuarios {
-        min-width: 130%;
+        min-width: 110%;
     }
 
     .contenedor-tabla table {
         width: 100%;
         margin-top: 1rem;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
 
-    .contenedor-tabla table span {
-        font-size: 1rem;
-        cursor: pointer;
-    }
 
+    table th:last-child,
+    table td:last-child {
+        font-size: 0.8rem;
+    }
 
 
 }

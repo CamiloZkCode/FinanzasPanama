@@ -1,5 +1,6 @@
 <template>
     <div>
+
         <div class="contenedor-botones">
             <button @click="mostrarUsuario = true">
                 Crear Usuario
@@ -440,7 +441,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 table tbody td {
-    height: 2rem;
+    height: 3rem;
     border-bottom: 1px solid var(--color-light);
     color: var(--color-dark-variant);
 }
@@ -454,6 +455,18 @@ table tbody tr:last-child td {
 .ver-mas,
 .edit {
     cursor: pointer;
+}
+
+.delete{
+    color: var(--color-peligro);
+}
+
+.ver-mas{
+    color: var(--primer-color);
+}
+
+.edit{
+    color: var(--color-riesgo);
 }
 
 .fila-expandida {
@@ -539,7 +552,7 @@ table tbody tr:last-child td {
     }
 
     .tabla-scrollable {
-        max-height: 45vh;
+        max-height: 50vh;
     }
 
 
@@ -549,13 +562,13 @@ table tbody tr:last-child td {
     }
 
     .contenedor-tabla .tabla-usuarios {
-        min-width: 150%;
+        min-width: 120%;
     }
 
     .contenedor-tabla table {
         width: 100%;
         margin-top: 1rem;
-        font-size: 1rem;
+        font-size: 0.95rem;
     }
 
     .contenedor-tabla table span {

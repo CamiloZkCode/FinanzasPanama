@@ -5,8 +5,13 @@
                 Crear Cliente
                 <span class="material-symbols-outlined">person_add</span>
             </button>
-        </div>
 
+            <button class="credito" @click="mostrarCredito = true">
+                Crear Prestamo
+                <span class="material-symbols-outlined">currency_exchange</span>
+            </button>
+
+        </div>
 
         <!-- Modal Cliente -->
         <div v-if="mostrarCliente" class="modal-overlay">
@@ -29,7 +34,6 @@
                         <option v-for="ruta in rutas" :key="ruta.id" :value="ruta.id">{{ ruta.nombre }}</option>
                     </select>
 
-                    <!-- Archivos -->
                     <label>Foto de la cédula:</label>
                     <input type="file" @change="onFileChange($event, 'cedula')" accept="image/*,application/pdf" />
 
@@ -39,151 +43,208 @@
                     <label>Documento del negocio:</label>
                     <input type="file" @change="onFileChange($event, 'documentonegocio')"
                         accept="image/*,application/pdf" />
+
                     <button type="submit">Guardar Cliente</button>
                 </form>
             </div>
         </div>
 
+        <!-- Modal Crédito -->
+        <div v-if="mostrarCredito" class="modal-overlay">
+            <div class="modal-content">
+                <span class="material-symbols-outlined close-icon" @click="mostrarCredito = false">close</span>
+                <h2>Registrar Préstamo</h2>
+                <form @submit.prevent="guardarCredito">
+                    <input v-model="credito.cedula_cliente" type="number" placeholder="Cédula del Cliente" required />
+                    <input v-model="credito.valor_prestamo" type="number" placeholder="Valor del Préstamo" required
+                        min="1" />
 
+                    <label>Fecha de Solicitud:</label>
+                    <input v-model="credito.fecha_solicitud" type="date" readonly />
 
+                    <label>Cantidad de Cuotas (máx. 24):</label>
+                    <input v-model="credito.cuotas" type="number" :max="24" required min="1" />
 
+                    <label>Valor Total (+20%):</label>
+                    <input v-model="credito.valor_total" type="text" readonly />
+
+                    <label>Fecha de Finalización:</label>
+                    <input v-model="credito.fecha_fin" type="date" readonly />
+
+                    <button type="submit">Guardar Crédito</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tabla -->
         <div class="contenedor-tabla">
+
+
             <div class="filtros">
-                <div class="filtro-cedula">
-                    <input class="filtro-ced" type="text" placeholder="Buscar por cédula" v-model="filtroCedula" />
+                <div class="filtro-nombre">
+                    <input class="filtro-nom" type="text" placeholder="Busqueda por nombre" />
                     <span class="material-symbols-outlined">search</span>
                 </div>
             </div>
 
             <div class="tabla-scrollable">
-                <table class="tabla-usuarios">
+                <table class="tabla-clientes">
                     <thead>
                         <tr>
-                            <th>N°CC</th>
-                            <th>Cargo</th>
+                            <th class="columna-min">N°Pagada</th>
                             <th>Nombre</th>
-                            <th>Jefe</th>
+                            <th>Abono</th>
+                            <th>Deuda</th>
+                            <th>Prestamo</th>
                             <th></th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="usuario in usuariosFiltrados" :key="usuario.id_usuario">
-                            <td>{{ usuario.id_usuario }}</td>
-                            <td>{{ usuario.rol }}</td>
-                            <td>{{ usuario.nombre }}</td>
-                            <td>{{ usuario.jefe }}</td>
-                            <td>
-                                <span class="material-symbols-outlined delete">delete</span>
-                            </td>
-                            <td>
-                                <span class="material-symbols-outlined edit">edit</span>
-                            </td>
-                        </tr>
+                        <template v-for="Clientes in CreditoCliente" :key="Clientes.id_cliente">
+                            <tr>
+                                <td class="columna-min ">
+                                    <div class="estado">
+                                        {{ Clientes.cuotas_pagadas }}/{{ Clientes.cuotas_deberia }}
+                                    </div>
+                                </td>
+                                <td>{{ Clientes.nombre }}</td>
+                                <td>${{ Clientes.abono }}</td>
+                                <td>${{ Clientes.abono_total }}</td>
+                                <td>${{ Clientes.prestamo_total }}</td>
+                                <td>
+                                    <span class="material-symbols-outlined ver-mas"
+                                        @click="toggleExpand(Clientes.id_cliente)">
+                                        {{ usuarioExpandido === Clientes.id_cliente ? 'keyboard_double_arrow_up' :
+                                            'keyboard_double_arrow_down' }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr v-if="usuarioExpandido === Clientes.id_cliente">
+                                <td colspan="7" class="fila-expandida">
+                                    <div class="info-extra">
+                                        <strong>Dirección:</strong> {{ Clientes.direccion }} &nbsp;&nbsp;|&nbsp;&nbsp;
+                                        <strong>Teléfono:</strong> {{ Clientes.telefono }}
+                                    </div>
+
+                                    <div class="info-extra">
+                                        <strong>Credito:</strong> ${{ Clientes.prestamo_total }}
+                                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                                        <strong>Numero Cuotas:</strong> {{ Clientes.numero_cuotas }}
+                                    </div>
+
+                                    <div class="info-extra">
+                                        <strong>Solicitud Credito:</strong> {{ Clientes.fecha_prestamo }}
+                                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                                        <strong>Fecha Finalización</strong> {{ Clientes.fecha_finalizacion }}
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
                     </tbody>
                 </table>
             </div>
+
+            <div class="contador-tarjetas">
+                <h4 class="tarjetas-cobradas">Tarjetas Cobradas: <span id="tarjeta">18</span></h4>
+                <h4 class="valor-cobrado">Valor Cobrado: <span id="cobro">$500</span></h4>
+            </div>
+
         </div>
     </div>
-
 </template>
 
+
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { registrarUsuario, obtenerSupervisores } from '@/services/usuario'
+import { ref, computed, watch } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 
-// Simula el usuario logueado
-const usuarioLogueado = ref({
-  id_usuario: 1065569071,
-  id_rol: 1 // 1 = Admin, 2 = Supervisor, 3 = Trabajador
-})
+const authStore = useAuthStore()
+const usuarioLogueado = computed(() => authStore.user)
 
-// Control de visibilidad de modales
-const mostrarUsuario = ref(false)
+// Modales
 const mostrarCliente = ref(false)
+const mostrarCredito = ref(false)
 
-// Datos del usuario a crear
-const usuario = ref({
-  id_usuario: '',
-  nombre: '',
-  correo: '',
-  telefono: '',
-  id_rol: '',
-  id_administrador: null,
-  id_supervisor: null,
-})
-
-// Datos del cliente a crear
+// Cliente
 const cliente = ref({
-  nombre: '',
-  direccion: '',
-  telefono: ''
+    documento: '',
+    nombre: '',
+    apellido: '',
+    direccion_casa: '',
+    direccion_trabajo: '',
+    telefono: '',
+    ocupacion: '',
+    referencia: '',
+    id_ruta: ''
 })
 
-// Supervisores obtenidos de la API
-const supervisores = ref([])
-
-const guardarUsuario = async () => {
-  try {
-    if (usuarioLogueado.value.id_rol === 1) {
-      if (usuario.value.id_rol == 2) {
-        usuario.value.id_administrador = usuarioLogueado.value.id_usuario
-        usuario.value.id_supervisor = null
-      } else if (usuario.value.id_rol == 3) {
-        usuario.value.id_administrador = usuarioLogueado.value.id_usuario
-        // id_supervisor viene del select
-      }
-    } else if (usuarioLogueado.value.id_rol === 2) {
-      usuario.value.id_administrador = null
-      usuario.value.id_supervisor = usuarioLogueado.value.id_usuario
-    }
-
-    await registrarUsuario(usuario.value)
-    alert('Usuario registrado con éxito')
-    mostrarUsuario.value = false
-  } catch (error) {
-    alert(`Error al registrar usuario: ${error.message || error}`)
-  }
-}
-
-const guardarCliente = () => {
-  console.log('Cliente registrado:', cliente.value)
-  mostrarCliente.value = false
-}
-
-const cargarSupervisores = async () => {
-  try {
-    supervisores.value = await obtenerSupervisores()
-  } catch (error) {
-    console.error('Error al obtener supervisores:', error)
-  }
-}
-
-onMounted(() => {
-  cargarSupervisores()
-})
-
-// Simulación de datos
-const usuarios = ref([
-  { id_usuario: 5554545, rol: 'Supervisor', nombre: 'Carlos', jefe: 'Alberto' },
-  { id_usuario: 1234567, rol: 'Administrador', nombre: 'Laura', jefe: '-' },
-  { id_usuario: 9876543, rol: 'Trabajador', nombre: 'Julián', jefe: 'Carlos' },
-  { id_usuario: 1112223, rol: 'Supervisor', nombre: 'Paola', jefe: 'Alberto' }
+// Rutas
+const rutas = ref([
+    { id: 1, nombre: 'Ruta 1' },
+    { id: 2, nombre: 'Ruta 2' }
 ])
 
-const filtroCedula = ref('')
-const filtroCargo = ref('')
+const guardarCliente = () => {
+    console.log('Cliente registrado:', cliente.value)
+    mostrarCliente.value = false
+}
 
-const usuariosFiltrados = computed(() => {
-  return usuarios.value.filter(usuario => {
-    const coincideCedula = usuario.id_usuario.toString().includes(filtroCedula.value.trim())
-    const coincideCargo =
-      filtroCargo.value === '' ||
-      usuario.rol.toLowerCase() === filtroCargo.value.toLowerCase()
-    return coincideCedula && coincideCargo
-  })
+// Crédito
+const credito = ref({
+    cedula_cliente: '',
+    valor_prestamo: null,
+    fecha_solicitud: new Date().toISOString().substring(0, 10),
+    cuotas: null,
+    valor_total: null,
+    fecha_fin: ''
 })
+
+watch([() => credito.value.valor_prestamo, () => credito.value.cuotas], () => {
+    const prestamo = parseFloat(credito.value.valor_prestamo)
+    const cuotas = parseInt(credito.value.cuotas)
+
+    if (!isNaN(prestamo) && !isNaN(cuotas)) {
+        credito.value.valor_total = (prestamo * 1.2).toFixed(2)
+
+        // ✅ Fecha actual corregida con zona horaria local
+        const hoy = new Date()
+        hoy.setMinutes(hoy.getMinutes() - hoy.getTimezoneOffset())
+
+        const fechaLocal = new Date(hoy) // clonar
+        let dias = cuotas
+
+        while (dias > 0) {
+            fechaLocal.setDate(fechaLocal.getDate() + 1)
+            const dia = fechaLocal.getDay()
+            if (dia !== 0) dias-- // Solo lunes a sábado
+        }
+
+        credito.value.fecha_fin = fechaLocal.toISOString().substring(0, 10)
+    }
+})
+
+const guardarCredito = () => {
+    console.log('Crédito registrado:', credito.value)
+    mostrarCredito.value = false
+}
+
+// Expansión de tabla
+const usuarioExpandido = ref(null)
+const toggleExpand = (id) => {
+    usuarioExpandido.value = usuarioExpandido.value === id ? null : id
+}
+
+// Datos de prueba
+const CreditoCliente = ref([
+    { id_cliente: 1001, nombre: 'María Gómez', telefono: '3123456789', direccion: 'Calle 10 #15-20', casa: 'Casa 1', numero_cuotas: 20, cuotas_pagadas: 5, cuotas_deberia: 8, abono: 100000, abono_total: 500000, prestamo_total: 1200000, fecha_prestamo: '2025-06-15', fecha_finalizacion: '2025-11-30' },
+    { id_cliente: 1002, nombre: 'Luis Martínez', telefono: '3132223344', direccion: 'Carrera 8 #45-12', casa: 'Casa 2', numero_cuotas: 24, cuotas_pagadas: 10, cuotas_deberia: 12, abono: 150000, abono_total: 1000000, prestamo_total: 1500000, fecha_prestamo: '2025-05-01', fecha_finalizacion: '2025-10-20' },
+    { id_cliente: 1003, nombre: 'Ana Torres', telefono: '3149998877', direccion: 'Diagonal 3 #21-18', casa: 'Casa 3', numero_cuotas: 18, cuotas_pagadas: 18, cuotas_deberia: 18, abono: 120000, abono_total: 1080000, prestamo_total: 1080000, fecha_prestamo: '2025-02-10', fecha_finalizacion: '2025-07-10' },
+    { id_cliente: 1004, nombre: 'Jorge Herrera', telefono: '3118887766', direccion: 'Av. Siempre Viva #123', casa: 'Casa 4', numero_cuotas: 12, cuotas_pagadas: 3, cuotas_deberia: 6, abono: 90000, abono_total: 270000, prestamo_total: 600000, fecha_prestamo: '2025-07-01', fecha_finalizacion: '2025-12-15' }
+])
+
 </script>
+
 
 <style scoped>
 :root {
@@ -220,6 +281,10 @@ const usuariosFiltrados = computed(() => {
     margin-bottom: 1rem;
 }
 
+.contenedor-botones .credito {
+    background: var(--color-aprobado);
+}
+
 button {
     display: inline-flex;
     align-items: center;
@@ -236,9 +301,9 @@ button {
     line-height: 1;
 }
 
-button:hover {
-    background: var(--primer-color);
-}
+
+
+
 
 input,
 select {
@@ -265,12 +330,21 @@ select {
 .modal-content {
     background: var(--color-background);
     padding: 2rem;
-    border-radius: 10px;
+    border-radius: var(--card-border-radius);
     width: 100%;
     max-width: 500px;
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
+}
+
+.modal-content::-webkit-scrollbar {
+    height: 0.5rem;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 0.8rem;
 }
 
 input[type="number"]::-webkit-outer-spin-button,
@@ -295,6 +369,9 @@ input[type="number"]::-webkit-inner-spin-button {
     margin-top: 1.0rem;
 }
 
+
+/*=========================Filtro Tabla==========================*/
+
 .filtros {
     display: flex;
     justify-content: space-between;
@@ -302,7 +379,7 @@ input[type="number"]::-webkit-inner-spin-button {
     align-items: center;
 }
 
-.filtro-cedula {
+.filtro-nombre {
     display: flex;
     align-items: center;
     background: var(--color-blanco);
@@ -312,7 +389,7 @@ input[type="number"]::-webkit-inner-spin-button {
     width: 16rem;
 }
 
-.filtro-cedula .filtro-ced {
+.filtro-nombre .filtro-nom {
     border: none;
     outline: none;
     background: transparent;
@@ -324,38 +401,17 @@ input[type="number"]::-webkit-inner-spin-button {
     color: var(--color-oscuro);
 }
 
-.filtro-cedula .material-symbols-outlined {
+.filtro-nombre .material-symbols-outlined {
     margin-left: 0.5rem;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     color: var(--color-oscuro);
     cursor: pointer;
-}
-
-.filtro-cargo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.filtro-cargo .lblcargo {
-    font-size: 1rem;
-    margin-right: 1rem;
-}
-
-.filtro-cargo select {
-    width: 16rem;
-    padding: 0.8rem;
-    border-radius: 0.4rem;
-    border: 1px solid #ccc;
-    font-size: 0.9rem;
-    margin: 0;
-    background: var(--color-blanco);
-    color: var(--color-oscuro);
 }
 
 
 /*=====================Tabla============*/
 .tabla-scrollable {
+    max-height: 60vh;
     overflow-x: auto;
     white-space: nowrap;
     margin-top: 0.5rem;
@@ -376,7 +432,7 @@ input[type="number"]::-webkit-inner-spin-button {
     border-radius: 0.8rem;
 }
 
-.contenedor-tabla .tabla-usuarios {
+.contenedor-tabla .tabla-clientes {
     width: auto;
     min-width: 100%;
     border-collapse: collapse;
@@ -398,9 +454,21 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 table tbody td {
-    height: 2rem;
+    height: 3rem;
     border-bottom: 1px solid var(--color-light);
     color: var(--color-dark-variant);
+}
+
+.contenedor-tabla .columna-min {
+    width: 80px;
+}
+
+.contenedor-tabla .tabla-clientes .estado {
+    background: var(--color-aprobado);
+    color: var(--color-blanco);
+    border-radius: var(--card-border-radius);
+    padding: 0.5rem 0rem;
+    margin: 0.5rem 0rem;
 }
 
 
@@ -408,6 +476,51 @@ table tbody tr:last-child td {
     border: none;
 }
 
+
+.ver-mas {
+    cursor: pointer;
+    color: var(--primer-color);
+}
+
+.fila-expandida {
+    background: var(--color-blanco);
+    color: var(--color-oscuro);
+
+}
+
+.info-extra {
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+}
+
+/*=======================TARJETAS COBRADAS=========================*/
+.contador-tarjetas {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+}
+
+.contador-tarjetas .tarjetas-cobradas {
+    width: 100%;
+    background-color: var(--primer-color);
+    color: var(--color-blanco);
+    padding: 0.5rem 1rem;
+    border-radius: var(--card-border-radius);
+    font-size: 1rem;
+
+}
+
+.contador-tarjetas .valor-cobrado {
+    width: 100%;
+    background-color: var(--color-aprobado);
+    color: var(--color-blanco);
+    padding: 0.5rem 1rem;
+    border-radius: var(--card-border-radius);
+    font-size: 1rem;
+}
 
 
 /*======================Media Querry====================*/
@@ -449,7 +562,7 @@ table tbody tr:last-child td {
 
 
 
-    /*===tabla ====*/
+    /*===================tabla ======================*/
 
     input,
     select {
@@ -474,34 +587,53 @@ table tbody tr:last-child td {
         max-width: 100%;
     }
 
-    .filtro-cargo {
-        flex-direction: column;
-        align-items: flex-start;
-        width: 80%;
+
+    .tabla-scrollable {
+        height: 60vh;
     }
 
 
     .contenedor-tabla {
         position: relative;
-        margin: 2rem 0 0 0;
     }
 
-    .contenedor-tabla .tabla-usuarios {
+    .contenedor-tabla .tabla-clientes {
         min-width: 150%;
     }
 
     .contenedor-tabla table {
         width: 100%;
         margin-top: 1rem;
-        font-size: 1rem;
+        font-size: 0.95rem;
+    }
+
+    .contenedor-tabla .tabla-clientes td,
+    th {
+        word-wrap: break-word;
+        white-space: normal;
+    }
+
+    .contenedor-tabla .columna-min {
+        width: 40px;
+        white-space: nowrap;
+        text-align: center;
+        font-size: 0.9rem;
     }
 
     .contenedor-tabla table span {
-        font-size: 1rem;
+        font-size: 1.5rem;
         cursor: pointer;
     }
 
+    .fila-expandida {
+        font-size: 1rem;
+        overflow-x: auto;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
 
-
+    .fila-expandida .info-extra {
+        white-space: initial;
+    }
 }
 </style>
