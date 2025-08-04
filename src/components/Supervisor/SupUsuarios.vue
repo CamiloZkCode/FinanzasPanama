@@ -11,7 +11,7 @@
         <!-- Modal Usuario -->
         <div v-if="mostrarUsuario" class="modal-overlay">
             <div class="modal-content">
-                <span class="material-symbols-outlined close-icon" @click="mostrarUsuario = false">close</span>
+                <span class="material-symbols-outlined close-icon" @click="mostrarUsuario = false;limpiarFormulario()">close</span>
 
                 <h2>Registrar Trabajador</h2>
 
@@ -83,6 +83,16 @@ const usuario = ref({
     id_administrador: null,
     id_supervisor: null,
 })
+//Funcion para limpiar el formulario al cerrar el modal
+const limpiarFormulario = () => {
+  usuario.value = {
+    id_usuario: "",
+    nombre: "",
+    correo: "",
+    telefono: "",
+    id_rol: "",
+  };
+};
 
 // Función para guardar usuario (aquí accedes al la url gestionada por axios)
 const guardarUsuario = async () => {

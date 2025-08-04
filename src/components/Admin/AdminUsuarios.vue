@@ -12,7 +12,7 @@
         <!-- Modal Usuario -->
         <div v-if="mostrarUsuario" class="modal-overlay">
             <div class="modal-content">
-                <span class="material-symbols-outlined close-icon" @click="mostrarUsuario = false">close</span>
+                <span class="material-symbols-outlined close-icon" @click="mostrarUsuario = false;limpiarFormulario()">close</span>
                 <h2>Registrar Usuario</h2>
 
                 <form @submit.prevent="guardarUsuario">
@@ -24,12 +24,12 @@
                     <!-- Selección de rol según usuario logueado -->
                     <select v-model="usuario.id_rol" required>
                         <option disabled value="">Seleccione un rol</option>
-                        <option v-if="usuarioLogueado.id_rol === 1" value="2">Supervisor</option>
+                        <option value="2">Supervisor</option>
                         <option value="3">Trabajador</option>
                     </select>
 
-                    <!-- Si el logueado es admin y está creando trabajador: debe seleccionar supervisor -->
-                    <select v-if="usuarioLogueado.id_rol === 1 && usuario.id_rol == 3" v-model="usuario.id_supervisor"
+                    <!--Si  está creando trabajador: debe seleccionar supervisor -->
+                    <select v-if="usuario.id_rol == 3" v-model="usuario.id_supervisor"
                         required>
                         <option disabled value="">Seleccione un supervisor</option>
                         <option v-for="sup in supervisores" :key="sup.id" :value="sup.id">{{ sup.nombre }}</option>
@@ -124,6 +124,8 @@ const usuarioLogueado = computed(() => authStore.user)
 
 // Control de visibilidad de modales
 const mostrarUsuario = ref(false)
+// Cargar Lista De supervisores
+const supervisores = ref([])
 
 // Datos del usuario a crear
 const usuario = ref({
@@ -133,41 +135,49 @@ const usuario = ref({
     telefono: '',
     id_rol: '',
     id_administrador: null,
-    id_supervisor: null,
+    id_supervisor: "",
 })
 
+const limpiarFormulario = () => {
+  usuario.value = {
+    id_usuario: "",
+    nombre: "",
+    correo: "",
+    telefono: "",
+    id_rol: "",
+    id_supervisor: "",
+  };
+};
 
-// Lista ficticia de supervisores
-const supervisores = ref([
-    { id: 101, nombre: 'Supervisor A' },
-    { id: 102, nombre: 'Supervisor B' },
-])
+
 
 
 // Función para guardar usuario (aquí accedes al la url gestionada por axios)
 const guardarUsuario = async () => {
   try {
-    if (usuarioLogueado.value.id_rol === 1) {
-      if (usuario.value.id_rol == 2) {
-        usuario.value.id_administrador = usuarioLogueado.value.id_usuario
-        usuario.value.id_supervisor = null
-      } else if (usuario.value.id_rol == 3) {
-        usuario.value.id_administrador = usuarioLogueado.value.id_usuario
-        // id_supervisor viene del select
-      }
-    } else if (usuarioLogueado.value.id_rol === 2) {
-      usuario.value.id_administrador = null
-      usuario.value.id_supervisor = usuarioLogueado.value.id_usuario
+    // Admin creando supervisor
+    console.log("Usuario logueado:", usuarioLogueado.value);
+    if (usuario.value.id_rol == 2) {
+      usuario.value.id_administrador = usuarioLogueado.value.id;
+      usuario.value.id_supervisor = null;
     }
+    // Admin creando trabajador
+    else if (usuario.value.id_rol == 3) {
+      usuario.value.id_administrador = usuario.value.id_supervisor; // el jefe inmediato es el supervisor elegido
+      usuario.value.id_supervisor = null;
+    }
+    
+    console.log("Datos a enviar:", usuario.value);
 
-    await registrarUsuario(usuario.value)
-    alert('Usuario registrado con éxito')
-    mostrarUsuario.value = false
+
+    await registrarUsuario(usuario.value);
+    alert('Usuario registrado con éxito');
+    mostrarUsuario.value = false;
+    limpiarFormulario();
   } catch (error) {
-    alert(`Error al registrar usuario: ${error.message || error}`)
+    alert(`Error al registrar usuario: ${error.message || error}`);
   }
-}
-
+};
 const usuarioExpandido = ref(null)
 
 const toggleExpand = (id) => {
