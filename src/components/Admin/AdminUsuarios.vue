@@ -12,7 +12,8 @@
         <!-- Modal Usuario -->
         <div v-if="mostrarUsuario" class="modal-overlay">
             <div class="modal-content">
-                <span class="material-symbols-outlined close-icon" @click="mostrarUsuario = false;limpiarFormulario()">close</span>
+                <span class="material-symbols-outlined close-icon"
+                    @click="mostrarUsuario = false; limpiarFormulario()">close</span>
                 <h2>Registrar Usuario</h2>
 
                 <form @submit.prevent="guardarUsuario">
@@ -29,8 +30,7 @@
                     </select>
 
                     <!--Si  está creando trabajador: debe seleccionar supervisor -->
-                    <select v-if="usuario.id_rol == 3" v-model="usuario.id_supervisor"
-                        required>
+                    <select v-if="usuario.id_rol == 3" v-model="usuario.id_supervisor" required>
                         <option disabled value="">Seleccione un supervisor</option>
                         <option v-for="sup in supervisores" :key="sup.id" :value="sup.id">{{ sup.nombre }}</option>
                     </select>
@@ -112,9 +112,12 @@
 
 <script setup>
 
-import { ref, computed,onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { registrarUsuario, obtenerSupervisores } from '@/services/usuario'
 import { useAuthStore } from '@/stores/auth'
+import alertify from 'alertifyjs'
+import 'alertifyjs/build/css/alertify.css'
+
 
 //Recupera id administrador 
 const authStore = useAuthStore()
@@ -139,14 +142,14 @@ const usuario = ref({
 })
 
 const limpiarFormulario = () => {
-  usuario.value = {
-    id_usuario: "",
-    nombre: "",
-    correo: "",
-    telefono: "",
-    id_rol: "",
-    id_supervisor: "",
-  };
+    usuario.value = {
+        id_usuario: "",
+        nombre: "",
+        correo: "",
+        telefono: "",
+        id_rol: "",
+        id_supervisor: "",
+    };
 };
 
 
@@ -155,29 +158,46 @@ const limpiarFormulario = () => {
 // Función para guardar usuario (aquí accedes al la url gestionada por axios)
 const guardarUsuario = async () => {
   try {
-    // Admin creando supervisor
-    console.log("Usuario logueado:", usuarioLogueado.value);
     if (usuario.value.id_rol == 2) {
-      usuario.value.id_administrador = usuarioLogueado.value.id;
-      usuario.value.id_supervisor = null;
+      usuario.value.id_administrador = usuarioLogueado.value.id
+      usuario.value.id_supervisor = null
+    } else if (usuario.value.id_rol == 3) {
+      usuario.value.id_administrador = usuario.value.id_supervisor
+      usuario.value.id_supervisor = null
     }
-    // Admin creando trabajador
-    else if (usuario.value.id_rol == 3) {
-      usuario.value.id_administrador = usuario.value.id_supervisor; // el jefe inmediato es el supervisor elegido
-      usuario.value.id_supervisor = null;
-    }
-    
-    console.log("Datos a enviar:", usuario.value);
 
+    const respuesta = await registrarUsuario(usuario.value)
 
-    await registrarUsuario(usuario.value);
-    alert('Usuario registrado con éxito');
-    mostrarUsuario.value = false;
-    limpiarFormulario();
+    // ✅ Alerta centrada estilo modal
+    alertify.alert(
+      'Usuario registrado con éxito',
+      `
+      <div style="text-align: left;">
+        <strong>Nombre de usuario:</strong> ${respuesta.datos.username}<br>
+        <strong>Contraseña temporal:</strong> ${respuesta.datos.contraseña_temporal}
+      </div>
+      `,
+      function () {
+        // Opcional: acción cuando se cierre el cuadro
+        console.log('Alerta cerrada')
+      }
+    ).set({
+      // Centrado
+      transition: 'fade',
+      movable: false,
+      resizable: false,
+      pinnable: false,
+      closable: true,
+    })
+
+    mostrarUsuario.value = false
+    limpiarFormulario()
   } catch (error) {
-    alert(`Error al registrar usuario: ${error.message || error}`);
+    console.error(error)
+    alertify.alert('Error', error.message || 'Error al registrar usuario')
   }
 };
+
 const usuarioExpandido = ref(null)
 
 const toggleExpand = (id) => {
@@ -185,15 +205,15 @@ const toggleExpand = (id) => {
 }
 
 const cargarSupervisores = async () => {
-  try {
-    supervisores.value = await obtenerSupervisores()
-  } catch (error) {
-    console.error('Error al obtener supervisores:', error)
-  }
+    try {
+        supervisores.value = await obtenerSupervisores()
+    } catch (error) {
+        console.error('Error al obtener supervisores:', error)
+    }
 }
 
 onMounted(() => {
-  cargarSupervisores()
+    cargarSupervisores()
 })
 
 // Simulación de datos
@@ -468,15 +488,15 @@ table tbody tr:last-child td {
     cursor: pointer;
 }
 
-.delete{
+.delete {
     color: var(--color-peligro);
 }
 
-.ver-mas{
+.ver-mas {
     color: var(--primer-color);
 }
 
-.edit{
+.edit {
     color: var(--color-riesgo);
 }
 
