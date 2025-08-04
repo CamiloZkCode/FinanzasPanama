@@ -81,7 +81,7 @@ const usuario = ref({
     telefono: '',
     id_rol: '3',
     id_administrador: null,
-    id_supervisor: null,
+
 })
 //Funcion para limpiar el formulario al cerrar el modal
 const limpiarFormulario = () => {
@@ -90,7 +90,6 @@ const limpiarFormulario = () => {
     nombre: "",
     correo: "",
     telefono: "",
-    id_rol: "",
   };
 };
 
@@ -98,7 +97,7 @@ const limpiarFormulario = () => {
 const guardarUsuario = async () => {
   try {
     // Siempre asigna el ID del usuario logueado como supervisor
-    usuario.value.id_supervisor = usuarioLogueado.value.id_usuario
+    usuario.value.id_administrador = usuarioLogueado.value.id
 
     await registrarUsuario(usuario.value)
     alert('Usuario registrado con éxito')
