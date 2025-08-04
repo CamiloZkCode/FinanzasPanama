@@ -20,7 +20,7 @@
                 <h3>Inicio</h3>
             </router-link>
 
-            <router-link  v-if="isAdmin || isSupervisor" to="/usuarios" class="mi-enlace" active-class="active">
+            <router-link   v-if="auth.isAdmin || auth.isSupervisor" to="/usuarios" class="mi-enlace" active-class="active">
                 <span class="material-symbols-outlined">
                     supervisor_account
                 </span>
@@ -35,14 +35,14 @@
                 <h3>Credito Cliente</h3>
             </router-link>
 
-            <router-link v-if="isAdmin" to="/credito-funcionario" class="mi-enlace" active-class="active">
+            <router-link  v-if="auth.isAdmin" to="/credito-funcionario" class="mi-enlace" active-class="active">
                 <span class="material-symbols-outlined">
                     payments
                 </span>
                 <h3>Credito Funcionario</h3>
             </router-link>
 
-            <router-link v-if="isAdmin" to="/ingresos" class="mi-enlace" active-class="active">
+            <router-link  v-if="auth.isAdmin" to="/ingresos" class="mi-enlace" active-class="active">
                 <span class="material-symbols-outlined">
                     checkbook
                 </span>
@@ -86,7 +86,6 @@
 <script setup>
 
 /*========================Cerrar Sesion =====================*/
-import { computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useMenuStore } from '@/stores/menu'
 import { useRouter } from 'vue-router'
@@ -95,11 +94,6 @@ const auth = useAuthStore()
 const menuStore = useMenuStore()
 const router = useRouter()
 
-// Roles
-const isAdmin = computed(() => auth.user?.rol?.toLowerCase() === 'administrador')
-const isSupervisor = computed(() => auth.user?.rol?.toLowerCase() === 'supervisor')
-// Asumimos que los demás son asesores si no son admin ni supervisor
-const isAsesor = computed(() => !isAdmin.value && !isSupervisor.value)
 
 function cerrarMenu() {
   menuStore.abierto = false
