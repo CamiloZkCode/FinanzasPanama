@@ -64,6 +64,12 @@
 <script setup>
 
 import { ref, computed } from 'vue'
+import { registrarUsuario } from '@/services/usuario'
+import { useAuthStore } from '@/stores/auth'
+
+//Recupera id administrador 
+const authStore = useAuthStore()
+const usuarioLogueado = computed(() => authStore.user)
 
 const mostrarUsuario = ref(false)
 
@@ -71,16 +77,27 @@ const mostrarUsuario = ref(false)
 const usuario = ref({
     id_usuario: '',
     nombre: '',
-    username: '',
-    contraseña: ''
+    correo: '',
+    telefono: '',
+    id_rol: '3',
+    id_administrador: null,
+    id_supervisor: null,
 })
 
-// Función para guardar usuario (aquí harías la petición a backend)
-const guardarUsuario = () => {
-    console.log('Usuario registrado:', { ...usuario.value })
-    mostrarUsuario.value = false
+// Función para guardar usuario (aquí accedes al la url gestionada por axios)
+const guardarUsuario = async () => {
+  try {
+    // Siempre asigna el ID del usuario logueado como supervisor
+    usuario.value.id_supervisor = usuarioLogueado.value.id_usuario
 
+    await registrarUsuario(usuario.value)
+    alert('Usuario registrado con éxito')
+    mostrarUsuario.value = false
+  } catch (error) {
+    alert(`Error al registrar usuario: ${error.message || error}`)
+  }
 }
+
 
 // Lista simulada de usuarios
 const usuarios = ref([
