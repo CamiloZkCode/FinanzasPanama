@@ -190,6 +190,10 @@ const guardarUsuario = async () => {
       closable: true,
     })
 
+     if (usuario.value.id_rol == 2) {
+      await cargarSupervisores()
+    }
+
     mostrarUsuario.value = false
     limpiarFormulario()
   } catch (error) {
