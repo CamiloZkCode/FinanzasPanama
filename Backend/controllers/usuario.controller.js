@@ -12,6 +12,6 @@ const getSupervisores = async (req, res) => {
 };
 
 module.exports = {
-  // ... otros controladores
+ 
   getSupervisores
   };
