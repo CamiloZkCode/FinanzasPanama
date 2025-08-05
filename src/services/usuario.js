@@ -1,22 +1,9 @@
-// src/services/usuariosService.js
-import axios from 'axios'
+import API from '@/services/axios'
 
-// Crea una instancia de Axios con la URL base de backend
-const API = axios.create({
-  baseURL: 'http://localhost:3000/api',
-})
+
 
 // Agregar token automáticamente a cada request si existe
-API.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token')
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
-    }
-    return config
-  },
-  (error) => Promise.reject(error)
-)
+
 
 // Función: Registrar usuario ,accede a ruta en el backend
 export async function registrarUsuario(usuario) {
@@ -27,7 +14,7 @@ export async function registrarUsuario(usuario) {
     throw err.response?.data || err
   }
 }
-//Función : Rellenar tabla , accede a ruta en el backend
+//Función : Rellenar tabla en vista administradores , accede a ruta en el backend
 export async function creartablaUsuarioXAdministrador(data) {
   try {
     const res = await API.post('/usuarios/cargartablausuarioXadmin',data)
@@ -37,7 +24,7 @@ export async function creartablaUsuarioXAdministrador(data) {
     throw err.response?.data || err
   } 
 }
-//Función : Rellenar tabla , accede a ruta en el backend
+//Función : Rellenar tabla en vista supervisores , accede a ruta en el backend
 export async function creartablaUsuarioXSupervisor(data) {
   try {
     const res = await API.post('/usuarios/cargartablausuarioXsupervisor', data)
@@ -57,4 +44,3 @@ export async function obtenerSupervisores() {
   }
 }
 
-export default API
