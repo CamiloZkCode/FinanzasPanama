@@ -25,7 +25,15 @@ const obtenerSupervisores = async () => {
   return rows;
 };
 
-const obtenerUsuariosxAdmin = async (id_administrador) => {
+const obtenerUsuariosXSupervisor =async(id_usuario)=>{
+  const [rows] = await db.query("SELECT * FROM usuarios WHERE id_administrador = ?", [
+    id_usuario,
+  ]);
+  return rows;
+  };
+
+
+const obtenerUsuariosxAdmin = async (id_usuario) => {
   const [rows] = await db.query(
     `
     SELECT 
@@ -45,7 +53,7 @@ const obtenerUsuariosxAdmin = async (id_administrador) => {
           WHERE id_rol = 2 AND id_administrador = ?
       )) -- Vendedores cuyos supervisores pertenecen al admin
     `,
-    [id_administrador, id_administrador]
+    [id_usuario, id_usuario]
   );
 
   return rows;
@@ -57,4 +65,5 @@ module.exports = {
   getRolById,
   obtenerSupervisores,
   obtenerUsuariosxAdmin,
+  obtenerUsuariosXSupervisor
 };
