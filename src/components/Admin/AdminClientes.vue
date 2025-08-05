@@ -461,6 +461,7 @@ table tbody td {
 
 .contenedor-tabla .columna-min {
     width: 1rem;
+    font-weight: 600;
 }
 
 .contenedor-tabla .tabla-clientes .estado {
@@ -485,7 +486,6 @@ table tbody tr:last-child td {
 .fila-expandida {
     background: var(--color-blanco);
     color: var(--color-oscuro);
-
 }
 
 .info-extra {
@@ -505,7 +505,7 @@ table tbody tr:last-child td {
 
 .contador-tarjetas .tarjetas-cobradas {
     width: 100%;
-    background-color: var(--primer-color);
+    background: var(--color-riesgo);
     color: var(--color-blanco);
     padding: 0.5rem 1rem;
     border-radius: var(--card-border-radius);
@@ -521,7 +521,6 @@ table tbody tr:last-child td {
     border-radius: var(--card-border-radius);
     font-size: 1rem;
 }
-
 
 /*======================Media Querry====================*/
 
@@ -559,8 +558,6 @@ table tbody tr:last-child td {
         font-size: 0.9rem;
         padding: 0.6rem 1rem;
     }
-
-
 
     /*===================tabla ======================*/
 
