@@ -1,6 +1,6 @@
 <template>
     <h1>Creditos Clientes</h1>
-    <AdminClientes  v-if="auth.isAdmin"/>
+    <AdminClientes  />
     <SupClientes v-if="auth.isSupervisor"/>
     <AsesorClientes v-if="auth.isAsesor"/>
 
