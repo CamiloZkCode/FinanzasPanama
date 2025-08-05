@@ -1,10 +1,5 @@
 import API from '@/services/axios'
 
-
-
-// Agregar token automáticamente a cada request si existe
-
-
 // Función: Registrar usuario ,accede a ruta en el backend
 export async function registrarUsuario(usuario) {
   try {
