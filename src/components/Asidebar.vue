@@ -35,7 +35,7 @@
                 <h3>Credito Cliente</h3>
             </router-link>
 
-            <router-link  v-if="auth.isAdmin" to="/credito-funcionario" class="mi-enlace" active-class="active">
+            <router-link  to="/credito-funcionario" class="mi-enlace" active-class="active">
                 <span class="material-symbols-outlined">
                     payments
                 </span>

@@ -52,21 +52,35 @@
         <!-- Modal Crédito -->
         <div v-if="mostrarCredito" class="modal-overlay">
             <div class="modal-content">
-                <span class="material-symbols-outlined close-icon" @click="mostrarCredito = false">close</span>
+                <span class="material-symbols-outlined close-icon"
+                    @click="mostrarCredito = false; resetearFormularioCredito()">close</span>
                 <h2>Registrar Préstamo</h2>
                 <form @submit.prevent="guardarCredito">
                     <input v-model="credito.cedula_cliente" type="number" placeholder="Cédula del Cliente" required />
-                    <input v-model="credito.valor_prestamo" type="number" placeholder="Valor del Préstamo" required
-                        min="1" />
 
                     <label>Fecha de Solicitud:</label>
                     <input v-model="credito.fecha_solicitud" type="date" readonly />
 
+                    <label>Moneda:</label>
+                    <select v-model="credito.moneda">
+                        <option value="USD">Dólares (USD)</option>
+                        <option value="CLP">Pesos Chilenos (CLP)</option>
+                        <option value="BRL">Real Brasileño (BRL)</option>
+                    </select>
+
+                    <label>Prestamo:</label>
+                    <input v-model="credito.valor_prestamo" type="number" placeholder="Valor del Préstamo" required
+                        min="1" />
+
                     <label>Cantidad de Cuotas (máx. 24):</label>
                     <input v-model="credito.cuotas" type="number" :max="24" required min="1" />
 
+                    <label>Valor por Cuota:</label>
+                    <input :value="formatearMoneda(credito.valor_cuota)" type="text" readonly />
+
                     <label>Valor Total (+20%):</label>
-                    <input v-model="credito.valor_total" type="text" readonly />
+                    <input :value="formatearMoneda(credito.valor_total)" type="text" readonly />
+
 
                     <label>Fecha de Finalización:</label>
                     <input v-model="credito.fecha_fin" type="date" readonly />
@@ -93,9 +107,9 @@
                         <tr>
                             <th class="columna-min">N°Pagada</th>
                             <th>Nombre</th>
-                            <th>Abono</th>
-                            <th>Deuda</th>
                             <th>Prestamo</th>
+                            <th>Supervisor</th>
+                            <th>Asesor</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -109,9 +123,9 @@
                                     </div>
                                 </td>
                                 <td>{{ Clientes.nombre }}</td>
-                                <td>${{ Clientes.abono }}</td>
-                                <td>${{ Clientes.abono_total }}</td>
-                                <td>${{ Clientes.prestamo_total }}</td>
+                                <td>${{ Clientes.prestamo_total}}</td>
+                                <td>{{ Clientes.nombre }}</td>
+                                <td>{{ Clientes.nombre }}</td>
                                 <td>
                                     <span class="material-symbols-outlined ver-mas"
                                         @click="toggleExpand(Clientes.id_cliente)">
@@ -137,6 +151,17 @@
                                         <strong>Solicitud Credito:</strong> {{ Clientes.fecha_prestamo }}
                                         &nbsp;&nbsp;|&nbsp;&nbsp;
                                         <strong>Fecha Finalización</strong> {{ Clientes.fecha_finalizacion }}
+                                    </div>
+
+                                    <div class="info-extra">
+                                        <div class="calendario-cuotas">
+                                            <div class="grid-cuotas">
+                                                <div v-for="n in generarCuotasPorCliente(Clientes.numero_cuotas)"
+                                                    :key="n" class="cuota">
+                                                    {{ n }}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -190,42 +215,89 @@ const guardarCliente = () => {
     mostrarCliente.value = false
 }
 
+const obtenerFechaActual = () => {
+    const hoy = new Date()
+    const year = hoy.getFullYear()
+    const month = String(hoy.getMonth() + 1).padStart(2, '0')
+    const day = String(hoy.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+}
+
+
 // Crédito
 const credito = ref({
     cedula_cliente: '',
     valor_prestamo: null,
-    fecha_solicitud: new Date().toISOString().substring(0, 10),
+    fecha_solicitud: obtenerFechaActual(),
     cuotas: null,
+    valor_cuota: null,
     valor_total: null,
-    fecha_fin: ''
+    fecha_fin: '',
+    moneda: 'USD'
 })
+
+const resetearFormularioCredito = () => {
+    credito.value = {
+        cedula_cliente: "",
+        valor_prestamo: "",
+        fecha_solicitud: obtenerFechaActual(),
+        cuotas: "",
+        valor_total: "",
+        valor_cuota: "",
+        fecha_finalizacion: "",
+        moneda: 'USD',
+    }
+}
 
 watch([() => credito.value.valor_prestamo, () => credito.value.cuotas], () => {
     const prestamo = parseFloat(credito.value.valor_prestamo)
     const cuotas = parseInt(credito.value.cuotas)
 
     if (!isNaN(prestamo) && !isNaN(cuotas)) {
-        credito.value.valor_total = (prestamo * 1.2).toFixed(2)
+        const totalConInteres = prestamo * 1.2
+        credito.value.valor_total = totalConInteres.toFixed(2)
+        credito.value.valor_cuota = (totalConInteres / cuotas).toFixed(2)
 
-        // ✅ Fecha actual corregida con zona horaria local
         const hoy = new Date()
         hoy.setMinutes(hoy.getMinutes() - hoy.getTimezoneOffset())
+        const fechaLocal = new Date(hoy)
 
-        const fechaLocal = new Date(hoy) // clonar
         let dias = cuotas
-
         while (dias > 0) {
             fechaLocal.setDate(fechaLocal.getDate() + 1)
             const dia = fechaLocal.getDay()
-            if (dia !== 0) dias-- // Solo lunes a sábado
+            if (dia !== 0) dias-- // Ignora domingos
         }
 
         credito.value.fecha_fin = fechaLocal.toISOString().substring(0, 10)
+    } else {
+        credito.value.valor_total = ""
+        credito.value.valor_cuota = ""
+        credito.value.fecha_fin = ""
     }
 })
 
+const localesPorMoneda = {
+    USD: 'en-US',
+    CLP: 'es-CL',
+    BRL: 'pt-BR'
+}
+
+const formatearMoneda = (valor) => {
+    if (isNaN(valor)) return ''
+    const moneda = credito.value.moneda
+    const locale = localesPorMoneda[moneda] || 'en-US'
+    return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: moneda,
+        minimumFractionDigits: 0
+    }).format(valor)
+}
+
+
 const guardarCredito = () => {
     console.log('Crédito registrado:', credito.value)
+    resetearFormularioCredito();
     mostrarCredito.value = false
 }
 
@@ -235,6 +307,7 @@ const toggleExpand = (id) => {
     usuarioExpandido.value = usuarioExpandido.value === id ? null : id
 }
 
+
 // Datos de prueba
 const CreditoCliente = ref([
     { id_cliente: 1001, nombre: 'María Gómez', telefono: '3123456789', direccion: 'Calle 10 #15-20', casa: 'Casa 1', numero_cuotas: 20, cuotas_pagadas: 5, cuotas_deberia: 8, abono: 100000, abono_total: 500000, prestamo_total: 1200000, fecha_prestamo: '2025-06-15', fecha_finalizacion: '2025-11-30' },
@@ -243,6 +316,12 @@ const CreditoCliente = ref([
     { id_cliente: 1004, nombre: 'Jorge Herrera', telefono: '3118887766', direccion: 'Av. Siempre Viva #123', casa: 'Casa 4', numero_cuotas: 12, cuotas_pagadas: 3, cuotas_deberia: 6, abono: 90000, abono_total: 270000, prestamo_total: 600000, fecha_prestamo: '2025-07-01', fecha_finalizacion: '2025-12-15' }
 ])
 
+// Generador de espacio de cuotas
+
+const generarCuotasPorCliente = (cuotas) => {
+    const num = parseInt(cuotas) || 0
+    return Array.from({ length: num }, (_, i) => i + 1)
+}
 </script>
 
 
@@ -491,6 +570,27 @@ table tbody tr:last-child td {
 .info-extra {
     padding: 0.5rem 1rem;
     font-size: 0.95rem;
+}
+
+.calendario-cuotas {
+    display: flex;
+    justify-content: center;
+}
+
+.grid-cuotas {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-top: 0.5rem;
+    width:300px;
+}
+
+.cuota {
+    background: var(--color-blanco);
+    border: 1px solid var(--color-info-gris);
+    text-align: center;
+    padding: 0.8rem;
+    border-radius: 5px;
 }
 
 /*=======================TARJETAS COBRADAS=========================*/

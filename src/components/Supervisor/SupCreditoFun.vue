@@ -49,37 +49,17 @@
                             <th>Monto</th>
                             <th>Abono</th>
                             <th>Saldo</th>
-                            <th></th>
-
-
                         </tr>
                     </thead>
                     <tbody>
                         <template v-for="prestamo in PrestamosFuncionario" :key="prestamo.id_prestamo">
                             <tr>
-                                <td>{{ prestamo.fecha_solicitud }}</td>
+                                <td class="columna-min">{{ prestamo.fecha_solicitud }}</td>
                                 <td>{{ prestamo.nombre_funcionario }}</td>
                                 <td>{{ prestamo.autorizado_por }}</td>
-                                <td>{{ prestamo.valor_prestamo }}</td>
-                                <td>{{ prestamo.abono_total }}</td>
-                                <td>{{ prestamo.saldo }}</td>
-                                <td>
-                                    <span class="material-symbols-outlined ver-mas"
-                                        @click="toggleExpand(prestamo.id_prestamo)">
-                                        {{ usuarioExpandido === prestamo.id_prestamo ? 'keyboard_double_arrow_up' :
-                                            'keyboard_double_arrow_down' }}
-                                    </span>
-                                </td>
-                            </tr>
-
-                            <tr
-                                v-if="usuarioExpandido === prestamo.id_prestamo && idRol === 1 && prestamo.estado === 'pendiente'">
-                                <td colspan="7">
-                                    <div>
-                                        <button @click="aceptarPrestamo(prestamo.id_prestamo)">Aceptar</button>
-                                        <button @click="denegarPrestamo(prestamo.id_prestamo)">Denegar</button>
-                                    </div>
-                                </td>
+                                <td>${{ prestamo.valor_prestamo }}</td>
+                                <td>${{ prestamo.abono_total }}</td>
+                                <td>${{ prestamo.saldo }}</td>
                             </tr>
                         </template>
                     </tbody>
@@ -97,7 +77,6 @@ import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
 const usuarioLogueado = computed(() => authStore.user)
 
-
 // Modales
 const mostrarPrestamo = ref(false)
 
@@ -111,27 +90,6 @@ const prestamo = ref({
     fecha_solicitud: new Date().toISOString().substring(0, 10),
 })
 
-// Logica para expandir el vermas y aceptar o denegar el adelanto
-const idRol = computed(() => authStore.user?.id_rol)
-
-const usuarioExpandido = ref(null)
-const toggleExpand = (id_prestamo) => {
-    console.log("Toggle expand:", id_prestamo)
-    usuarioExpandido.value = usuarioExpandido.value === id_prestamo ? null : id_prestamo
-}
-
-const denegarPrestamo = (id_prestamo) => {
-    console.log(`Denegar préstamo ${id_prestamo}`)
-    // Aquí podrías eliminarlo o cambiar su estado a 'rechazado'
-}
-
-const aceptarPrestamo = (id_prestamo) => {
-    const prestamo = PrestamosFuncionario.value.find(p => p.id_prestamo === id_prestamo)
-    if (prestamo) {
-        prestamo.estado = 'aceptado'
-        usuarioExpandido.value = null // opcional: cerrar al aceptar
-    }
-}
 
 watch([() => prestamo.value.valor_prestamo, () => prestamo.value.cuotas], () => {
     const valor = parseFloat(prestamo.value.valor_prestamo)
@@ -157,14 +115,7 @@ watch([() => prestamo.value.valor_prestamo, () => prestamo.value.cuotas], () => 
 
 
 const guardarPrestamo = () => {
-    const nuevoPrestamo = {
-        id_prestamo: Date.now(),
-        ...prestamo.value,
-        abono_total: 0,
-        saldo: prestamo.value.valor_prestamo,
-        estado: 'pendiente'
-    }
-    PrestamosFuncionario.value.push(nuevoPrestamo)
+    console.log('Préstamo guardado:', prestamo.value)
     mostrarPrestamo.value = false
 }
 
@@ -180,7 +131,7 @@ const PrestamosFuncionario = ref([
         saldo: 600,
         fecha_solicitud: '2025-07-15',
     },
-    {
+      {
         id_prestamo: 2,
         cedula_funcionario: '100200300',
         nombre_funcionario: 'Carlos Pérez',
@@ -189,9 +140,8 @@ const PrestamosFuncionario = ref([
         abono_total: 400,
         saldo: 600,
         fecha_solicitud: '2025-07-15',
-        estado: 'pendiente',
     },
-    {
+      {
         id_prestamo: 3,
         cedula_funcionario: '100200300',
         nombre_funcionario: 'Carlos Pérez',
@@ -200,20 +150,18 @@ const PrestamosFuncionario = ref([
         abono_total: 400,
         saldo: 600,
         fecha_solicitud: '2025-07-15',
-        estado: 'pendiente',
     },
-    {
+      {
         id_prestamo: 4,
         cedula_funcionario: '100200300',
         nombre_funcionario: 'Carlos Pérez',
-        autorizado_por: 'Camilo',
+        autorizado_por:'Camilo',
         valor_prestamo: 1000,
         abono_total: 400,
         saldo: 600,
         fecha_solicitud: '2025-07-15',
-        estado: 'pendiente',
     },
-    {
+      {
         id_prestamo: 5,
         cedula_funcionario: '100200300',
         nombre_funcionario: 'Carlos Pérez',
@@ -222,9 +170,8 @@ const PrestamosFuncionario = ref([
         abono_total: 400,
         saldo: 600,
         fecha_solicitud: '2025-07-15',
-        estado: 'pendiente',
     },
-    {
+      {
         id_prestamo: 6,
         cedula_funcionario: '100200300',
         nombre_funcionario: 'Carlos Pérez',
@@ -233,7 +180,6 @@ const PrestamosFuncionario = ref([
         abono_total: 400,
         saldo: 600,
         fecha_solicitud: '2025-07-15',
-        estado: 'pendiente',
     }
 ])
 
