@@ -25,37 +25,35 @@ const obtenerSupervisores = async () => {
   return rows;
 };
 
-const obtenerUsuariosXSupervisor =async(id_usuario)=>{
-  const [rows] = await db.query("SELECT * FROM usuarios WHERE id_administrador = ?", [
-    id_usuario,
-  ]);
-  return rows;
-  };
-
-
-const obtenerUsuariosxAdmin = async (id_usuario) => {
+const obtenerUsuariosxAdmin = async (id_admin) => {
   const [rows] = await db.query(
     `
     SELECT 
-      id_usuario AS id,
-      nombre,
-      telefono,
-      correo,
-      username,
-      id_rol,
-      id_administrador
-    FROM usuarios
+      u.id_usuario AS id,
+      u.nombre,
+      u.telefono,
+      u.correo,
+      u.username,
+      r.rol AS cargo,
+      -- Datos del jefe directo
+      jefe.nombre AS nombre_jefe,
+      jefe_rol.rol AS cargo_jefe
+    FROM usuarios u
+    JOIN roles r ON u.id_rol = r.id_rol
+    LEFT JOIN usuarios jefe ON u.id_administrador = jefe.id_usuario
+    LEFT JOIN roles jefe_rol ON jefe.id_rol = jefe_rol.id_rol
     WHERE 
-      (id_rol = 2 AND id_administrador = ?) -- Supervisores del admin
+      -- Supervisores directos del administrador
+      (u.id_rol = 2 AND u.id_administrador = ?)
       OR 
-      (id_rol = 3 AND id_administrador IN (
-          SELECT id_usuario FROM usuarios 
-          WHERE id_rol = 2 AND id_administrador = ?
-      )) -- Vendedores cuyos supervisores pertenecen al admin
+      -- Asesores cuyos supervisores reportan al administrador
+      (u.id_rol = 3 AND u.id_administrador IN (
+        SELECT id_usuario FROM usuarios 
+        WHERE id_rol = 2 AND id_administrador = ?
+      ))
     `,
-    [id_usuario, id_usuario]
+    [id_admin, id_admin]
   );
-
   return rows;
 };
 
@@ -65,5 +63,4 @@ module.exports = {
   getRolById,
   obtenerSupervisores,
   obtenerUsuariosxAdmin,
-  obtenerUsuariosXSupervisor
 };

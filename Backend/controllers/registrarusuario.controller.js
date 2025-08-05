@@ -40,13 +40,13 @@ async function registrarUsuario(req, res) {
       [id_usuario, nombre,telefono,correo, username, hash, id_rol, id_administrador || null]
     );
 
-    //res.status(201).json({ 
-      //message: 'Usuario registrado correctamente',
-      //datos: {
-        //username: username,
-        //contraseña_temporal: contraseña // Solo para confirmación, no debería enviarse en producción
-      //}
-    //});
+    res.status(201).json({ 
+      message: 'Usuario registrado correctamente',
+      datos: {
+        username: username,
+        contraseña_temporal: contraseña // Solo para confirmación, no debería enviarse en producción
+      }
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Error del servidor' });

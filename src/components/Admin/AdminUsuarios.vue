@@ -52,9 +52,8 @@
                     <label class="lblcargo">Cargo:</label>
                     <select v-model="filtroCargo">
                         <option value="">Todos los cargos</option>
-                        <option value="Administrador">Administrador</option>
                         <option value="Supervisor">Supervisor</option>
-                        <option value="Trabajador">Trabajador</option>
+                        <option value="Asesores">Asesores</option>
                     </select>
                 </div>
             </div>
@@ -77,8 +76,8 @@
                             <tr>
                                 <td>{{ usuario.id }}</td>
                                 <td>{{ usuario.nombre }}</td>
-                                <td>{{ obtenerNombreRol(usuario.id_rol)}}</td>
-                                <td>{{ usuario.id_administrador }}</td>
+                                <td>{{ usuario.cargo }}</td>
+                                <td>{{ usuario.nombre_jefe }}</td>
                                 <td>
                                     <span class="material-symbols-outlined delete">delete</span>
                                 </td>
@@ -86,15 +85,14 @@
                                     <span class="material-symbols-outlined edit">edit</span>
                                 </td>
                                 <td>
-                                    <span class="material-symbols-outlined ver-mas"
-                                        @click="toggleExpand(usuario.id_usuario)">
-                                        {{ usuarioExpandido === usuario.id_usuario ? 'keyboard_double_arrow_up' :
+                                    <span class="material-symbols-outlined ver-mas" @click="toggleExpand(usuario.id)">
+                                        {{ usuarioExpandido === usuario.id ? 'keyboard_double_arrow_up' :
                                             'keyboard_double_arrow_down' }}
                                     </span>
                                 </td>
                             </tr>
 
-                            <tr v-if="usuarioExpandido === usuario.id_usuario">
+                            <tr v-if="usuarioExpandido === usuario.id">
                                 <td colspan="7" class="fila-expandida">
                                     <div class="info-extra">
                                         <strong>Correo:</strong> {{ usuario.correo }} &nbsp;&nbsp;|&nbsp;&nbsp;
@@ -113,9 +111,9 @@
 <script setup>
 
 import { ref, computed, onMounted } from 'vue'
-import { registrarUsuario, obtenerSupervisores,creartablaUsuarioXAdministrador } from '@/services/usuario'
+import { registrarUsuario, obtenerSupervisores, creartablaUsuarioXAdministrador } from '@/services/usuario'
 import { useAuthStore } from '@/stores/auth'
-import alertify from 'alertifyjs'
+import alertify from 'alertifyjs' 
 import 'alertifyjs/build/css/alertify.css'
 
 
@@ -124,24 +122,10 @@ import 'alertifyjs/build/css/alertify.css'
 const authStore = useAuthStore()
 const usuarioLogueado = computed(() => authStore.user)
 
-const roles = {
-  1: 'Administrador',
-  2: 'Supervisor',
-  3: 'Trabajador'
-}
-
-const obtenerNombreRol = (idRol) => {
-  return roles[idRol] || idRol
-}
-
-const obtenerNombreJefe = (idAdministrador) => {
-  if (!idAdministrador) return 'N/A'
-  const jefe = supervisores.value.find(s => s.id === idAdministrador)
-  return jefe ? jefe.nombre : idAdministrador
-}
 
 // Control de visibilidad de modales
 const mostrarUsuario = ref(false)
+
 // Cargar Lista De supervisores
 const supervisores = ref([])
 
@@ -163,56 +147,57 @@ const limpiarFormulario = () => {
         correo: "",
         telefono: "",
         id_rol: "",
+        id_administrador: null,
         id_supervisor: "",
     };
 };
 
 // Función para guardar usuario (aquí accedes al la url gestionada por axios)
 const guardarUsuario = async () => {
-  try {
-    if (usuario.value.id_rol == 2) {
-      usuario.value.id_administrador = usuarioLogueado.value.id
-      usuario.value.id_supervisor = null
-    } else if (usuario.value.id_rol == 3) {
-      usuario.value.id_administrador = usuario.value.id_supervisor
-      usuario.value.id_supervisor = null
+    try {
+        if (usuario.value.id_rol == 2) {
+            usuario.value.id_administrador = usuarioLogueado.value.id;
+            usuario.value.id_supervisor = null;
+        } else if (usuario.value.id_rol == 3) {
+            usuario.value.id_administrador = usuario.value.id_supervisor;
+            usuario.value.id_supervisor = null;
+        }
+
+        const respuesta = await registrarUsuario(usuario.value);
+
+        // ✅ La alerta de éxito ahora contiene la lógica para cerrar el modal
+        alertify.alert(
+            'Usuario registrado con éxito',
+            `
+                <div style="text-align: left;">
+                <strong>Nombre de usuario:</strong> ${respuesta.datos.username}<br>
+                <strong>Contraseña temporal:</strong> ${respuesta.datos.contraseña_temporal}
+                </div>
+            `,
+            function () {
+                // ✅ Esta función se ejecuta SÓLO cuando el usuario hace clic en 'OK'.
+                // Aquí cerramos el modal principal, limpiamos el formulario y recargamos los datos.
+                mostrarUsuario.value = false;
+                limpiarFormulario();
+                cargarUsuariosDelAdministrador();
+                if (usuario.value.id_rol == 2) {
+                    cargarSupervisores();
+                }
+            }
+        ).set({
+            transition: 'fade',
+            movable: false,
+            resizable: false,
+            pinnable: false,
+            closable: true,
+        });
+
+    } catch (error) {
+        console.error(error);
+        alertify.alert('Error', error.message || 'Error al registrar usuario');
     }
-
-    const respuesta = await registrarUsuario(usuario.value)
-
-    // ✅ Alerta centrada estilo modal
-    alertify.alert(
-      'Usuario registrado con éxito',
-      `
-      <div style="text-align: left;">
-        <strong>Nombre de usuario:</strong> ${respuesta.datos.username}<br>
-        <strong>Contraseña temporal:</strong> ${respuesta.datos.contraseña_temporal}
-      </div>
-      `,
-      function () {
-        // Opcional: acción cuando se cierre el cuadro
-        console.log('Alerta cerrada')
-      }
-    ).set({
-      // Centrado
-      transition: 'fade',
-      movable: false,
-      resizable: false,
-      pinnable: false,
-      closable: true,
-    })
-     await cargarUsuariosDelAdministrador()
-     if (usuario.value.id_rol == 2) {
-      await cargarSupervisores()
-    }
-
-    mostrarUsuario.value = false
-    limpiarFormulario()
-  } catch (error) {
-    console.error(error)
-    alertify.alert('Error', error.message || 'Error al registrar usuario')
-  }
 };
+
 
 const usuarioExpandido = ref(null)
 
@@ -229,36 +214,31 @@ const cargarSupervisores = async () => {
 }
 
 onMounted(async () => {
-  console.log('Iniciando carga de datos...')
-  try {
-    await cargarUsuariosDelAdministrador()
-    await cargarSupervisores()
-    console.log('Datos cargados completamente')
-  } catch (error) {
-    console.error('Error en mounted:', error)
-  }
+    console.log('Iniciando carga de datos...')
+    try {
+        await cargarUsuariosDelAdministrador()
+        await cargarSupervisores()
+        console.log('Datos cargados completamente')
+    } catch (error) {
+        console.error('Error en mounted:', error)
+    }
 })
 
 async function cargarUsuariosDelAdministrador() {
-  try {
-    const data = {
-      id_administrador: usuarioLogueado.value.id 
+    try {
+        const data = {
+            id_administrador: usuarioLogueado.value.id
+        }
+
+        const resultado = await creartablaUsuarioXAdministrador(data)
+
+        // FORMA MÁS SEGURA DE ASIGNAR (garantiza reactividad)
+        usuarios.value = Array.isArray(resultado) ? [...resultado] : []
+
+    } catch (error) {
+        console.error("Error al cargar usuarios:", error)
+        usuarios.value = [] // Limpiar en caso de error
     }
-
-    const resultado = await creartablaUsuarioXAdministrador(data)
-    console.log("Resultado crudo:", resultado)
-    
-    // FORMA MÁS SEGURA DE ASIGNAR (garantiza reactividad)
-    usuarios.value = Array.isArray(resultado) ? [...resultado] : []
-    
-    console.log("Usuarios después de asignar:", usuarios.value)
-    console.log("¿Es array?", Array.isArray(usuarios.value))
-    console.log("Longitud:", usuarios.value.length)
-
-  } catch (error) {
-    console.error("Error al cargar usuarios:", error)
-    usuarios.value = [] // Limpiar en caso de error
-  }
 }
 
 const usuarios = ref([])
@@ -269,24 +249,22 @@ const filtroCargo = ref('')
 
 // Filtro combinado
 const usuariosFiltrados = computed(() => {
-  if (!Array.isArray(usuarios.value)) return []
-  
-  return usuarios.value.filter(usuario => {
-    const usuarioValido = usuario && typeof usuario === 'object'
-    if (!usuarioValido) return false
-    
-    const coincideCedula = usuario.id?.toString()
-      .includes(filtroCedula.value.trim())
-    
-    const coincideCargo = filtroCargo.value === '' ||
-      obtenerNombreRol(usuario.id_rol).toLowerCase()
-        .includes(filtroCargo.value.toLowerCase())
-    
-    return coincideCedula && coincideCargo
-  })
+    if (!Array.isArray(usuarios.value)) return []
+
+    return usuarios.value.filter(usuario => {
+        const usuarioValido = usuario && typeof usuario === 'object'
+        if (!usuarioValido) return false
+
+        const coincideCedula = usuario.id?.toString()
+            .includes(filtroCedula.value.trim())
+
+        const coincideCargo = filtroCargo.value === '' ||
+            (usuario.cargo || '').toLowerCase()
+                .includes(filtroCargo.value.toLowerCase())
+
+        return coincideCedula && coincideCargo
+    })
 })
-
-
 
 </script>
 
