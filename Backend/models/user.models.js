@@ -25,26 +25,27 @@ const obtenerSupervisores = async () => {
   return rows;
 };
 
-const obtenerUsuariosxAdmin = async (id_admin) => {
+const obtenerUsuariosxAdmin = async (id_administrador) => {
   const [rows] = await db.query(
     `
-    SELECT    
-      u1.id_usuario AS id,
-      u1.nombre,
-      u1.telefono,
-      u1.correo,
-      u1.username,
-      u1.id_rol,
-      u1.id_administrador,
-      u1.id_supervisor
-    FROM usuarios u1
-    LEFT JOIN usuarios u2 ON u1.id_supervisor = u2.id_usuario
-    WHERE    
-      (u1.id_rol = 2 AND u1.id_administrador = ?)
+    SELECT 
+      id_usuario AS id,
+      nombre,
+      telefono,
+      correo,
+      username,
+      id_rol,
+      id_administrador
+    FROM usuarios
+    WHERE 
+      (id_rol = 2 AND id_administrador = ?) -- Supervisores del admin
       OR 
-      (u1.id_rol = 3 AND u2.id_administrador = ?)
-  `,
-    [id_admin, id_admin]
+      (id_rol = 3 AND id_administrador IN (
+          SELECT id_usuario FROM usuarios 
+          WHERE id_rol = 2 AND id_administrador = ?
+      )) -- Vendedores cuyos supervisores pertenecen al admin
+    `,
+    [id_administrador, id_administrador]
   );
 
   return rows;

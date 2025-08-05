@@ -6,7 +6,10 @@ const usuariocontroller = require('../controllers/usuario.controller');
 
 
 
+
 router.post('/registrousuario', verificarToken, verificarRoles('Administrador','Supervisor'), registrarUsuario);
 router.get('/supervisores', usuariocontroller.getSupervisores);
+router.post(
+  '/cargartablausuarioXadmin',usuariocontroller.getUsuariosxAdmin);
 module.exports = router; 
 
