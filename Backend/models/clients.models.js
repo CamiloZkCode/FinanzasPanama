@@ -1,4 +1,4 @@
-const db = require('./db');
+const db = require("../config/db");
 
 async function crearCliente(cliente) {
   const {
@@ -17,7 +17,7 @@ direccion_casa, direccion_trabajo, telefono, ocupacion,
     )
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
-
+  
   const values = [
     documento_cliente, nombre, apellido,
     direccion_casa, direccion_trabajo, telefono, ocupacion,
