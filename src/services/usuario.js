@@ -18,7 +18,7 @@ API.interceptors.request.use(
   (error) => Promise.reject(error)
 )
 
-// Función: Registrar usuario ,accede a rita en el backend
+// Función: Registrar usuario ,accede a ruta en el backend
 export async function registrarUsuario(usuario) {
   try {
     const res = await API.post('/usuarios/registrousuario', usuario)
@@ -26,6 +26,25 @@ export async function registrarUsuario(usuario) {
   } catch (err) {
     throw err.response?.data || err
   }
+}
+//Función : Rellenar tabla , accede a ruta en el backend
+export async function creartablaUsuarioXAdministrador(data) {
+  try {
+    const res = await API.post('/usuarios/cargartablausuarioXadmin',data)
+    console.log('Respuesta de /usuarios/adminUsuarios:', res.data)
+    return res.data
+  } catch (err) {
+    throw err.response?.data || err
+  } 
+}
+//Función : Rellenar tabla , accede a ruta en el backend
+export async function crearatablaUsuarioXSupervisor(tabla) {
+  try {
+    const res = await API.post('/usuarios/cargartablausuarioXSupervisor', tabla)
+    return res.data
+  } catch (err) {
+    throw err.response?.data || err
+  } 
 }
 
 // Función: Obtener supervisores

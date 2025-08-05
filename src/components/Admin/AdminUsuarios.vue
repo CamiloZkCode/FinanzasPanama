@@ -75,10 +75,10 @@
                     <tbody>
                         <template v-for="usuario in usuariosFiltrados" :key="usuario.id_usuario">
                             <tr>
-                                <td>{{ usuario.id_usuario }}</td>
+                                <td>{{ usuario.id }}</td>
                                 <td>{{ usuario.nombre }}</td>
-                                <td>{{ usuario.rol }}</td>
-                                <td>{{ usuario.jefe }}</td>
+                                <td>{{ obtenerNombreRol(usuario.id_rol)}}</td>
+                                <td>{{ usuario.id_administrador }}</td>
                                 <td>
                                     <span class="material-symbols-outlined delete">delete</span>
                                 </td>
@@ -113,17 +113,32 @@
 <script setup>
 
 import { ref, computed, onMounted } from 'vue'
-import { registrarUsuario, obtenerSupervisores } from '@/services/usuario'
+import { registrarUsuario, obtenerSupervisores,creartablaUsuarioXAdministrador } from '@/services/usuario'
 import { useAuthStore } from '@/stores/auth'
 import alertify from 'alertifyjs'
 import 'alertifyjs/build/css/alertify.css'
+
 
 
 //Recupera id administrador 
 const authStore = useAuthStore()
 const usuarioLogueado = computed(() => authStore.user)
 
+const roles = {
+  1: 'Administrador',
+  2: 'Supervisor',
+  3: 'Operario'
+}
 
+const obtenerNombreRol = (idRol) => {
+  return roles[idRol] || idRol
+}
+
+const obtenerNombreJefe = (idAdministrador) => {
+  if (!idAdministrador) return 'N/A'
+  const jefe = supervisores.value.find(s => s.id === idAdministrador)
+  return jefe ? jefe.nombre : idAdministrador
+}
 
 // Control de visibilidad de modales
 const mostrarUsuario = ref(false)
@@ -140,7 +155,7 @@ const usuario = ref({
     id_administrador: null,
     id_supervisor: "",
 })
-
+// Funcion para limpiar formulario de crear usario
 const limpiarFormulario = () => {
     usuario.value = {
         id_usuario: "",
@@ -151,9 +166,6 @@ const limpiarFormulario = () => {
         id_supervisor: "",
     };
 };
-
-
-
 
 // Función para guardar usuario (aquí accedes al la url gestionada por axios)
 const guardarUsuario = async () => {
@@ -189,7 +201,7 @@ const guardarUsuario = async () => {
       pinnable: false,
       closable: true,
     })
-
+     await cargarUsuariosDelAdministrador()
      if (usuario.value.id_rol == 2) {
       await cargarSupervisores()
     }
@@ -217,31 +229,31 @@ const cargarSupervisores = async () => {
 }
 
 onMounted(() => {
+    console.log('Usuario logueado:', usuarioLogueado.value)
     cargarSupervisores()
+    cargarUsuariosDelAdministrador()
+    console.log('Usuarios cargados:', usuarios.value)
 })
 
-// Simulación de datos
+async function cargarUsuariosDelAdministrador() {
+  try {
+    const data = {
+      id_administrador: usuarioLogueado.value.id 
+    }
+
+    const resultado = await creartablaUsuarioXAdministrador(data)
+    console.log("Resultado recibido:", resultado)
+
+    usuarios.value = [...resultado] // 👈 ASIGNACIÓN CORRECTA
+
+  } catch (error) {
+    console.error("Error al cargar usuarios del administrador:", error)
+  }
+}
+
+
 const usuarios = ref([
-    { id_usuario: 1000001, rol: 'Administrador', nombre: 'Laura', jefe: '-', correo: 'laura@example.com', telefono: '3001111111' },
-    { id_usuario: 1000002, rol: 'Supervisor', nombre: 'Carlos', jefe: 'Laura', correo: 'carlos@example.com', telefono: '3001111112' },
-    { id_usuario: 1000003, rol: 'Trabajador', nombre: 'Julián', jefe: 'Carlos', correo: 'julian@example.com', telefono: '3001111113' },
-    { id_usuario: 1000004, rol: 'Supervisor', nombre: 'Paola', jefe: 'Laura', correo: 'paola@example.com', telefono: '3001111114' },
-    { id_usuario: 1000005, rol: 'Trabajador', nombre: 'Diego', jefe: 'Paola', correo: 'diego@example.com', telefono: '3001111115' },
-    { id_usuario: 1000006, rol: 'Trabajador', nombre: 'Ana', jefe: 'Carlos', correo: 'ana@example.com', telefono: '3001111116' },
-    { id_usuario: 1000007, rol: 'Supervisor', nombre: 'Camila', jefe: 'Laura', correo: 'camila@example.com', telefono: '3001111117' },
-    { id_usuario: 1000008, rol: 'Trabajador', nombre: 'Luis', jefe: 'Camila', correo: 'luis@example.com', telefono: '3001111118' },
-    { id_usuario: 1000009, rol: 'Trabajador', nombre: 'Sofía', jefe: 'Camila', correo: 'sofia@example.com', telefono: '3001111119' },
-    { id_usuario: 1000010, rol: 'Administrador', nombre: 'Andrés', jefe: '-', correo: 'andres@example.com', telefono: '3001111120' },
-    { id_usuario: 1000011, rol: 'Supervisor', nombre: 'Natalia', jefe: 'Andrés', correo: 'natalia@example.com', telefono: '3001111121' },
-    { id_usuario: 1000012, rol: 'Trabajador', nombre: 'Felipe', jefe: 'Natalia', correo: 'felipe@example.com', telefono: '3001111122' },
-    { id_usuario: 1000013, rol: 'Supervisor', nombre: 'Esteban', jefe: 'Laura', correo: 'esteban@example.com', telefono: '3001111123' },
-    { id_usuario: 1000014, rol: 'Trabajador', nombre: 'Mariana', jefe: 'Esteban', correo: 'mariana@example.com', telefono: '3001111124' },
-    { id_usuario: 1000015, rol: 'Trabajador', nombre: 'Valentina', jefe: 'Carlos', correo: 'valentina@example.com', telefono: '3001111125' },
-    { id_usuario: 1000016, rol: 'Supervisor', nombre: 'Ricardo', jefe: 'Andrés', correo: 'ricardo@example.com', telefono: '3001111126' },
-    { id_usuario: 1000017, rol: 'Trabajador', nombre: 'Daniela', jefe: 'Ricardo', correo: 'daniela@example.com', telefono: '3001111127' },
-    { id_usuario: 1000018, rol: 'Trabajador', nombre: 'Manuel', jefe: 'Esteban', correo: 'manuel@example.com', telefono: '3001111128' },
-    { id_usuario: 1000019, rol: 'Trabajador', nombre: 'Elena', jefe: 'Camila', correo: 'elena@example.com', telefono: '3001111129' },
-    { id_usuario: 1000020, rol: 'Trabajador', nombre: 'Sebastián', jefe: 'Natalia', correo: 'sebastian@example.com', telefono: '3001111130' }
+   
 ])
 
 
@@ -250,16 +262,18 @@ const filtroCargo = ref('')
 
 // Filtro combinado
 const usuariosFiltrados = computed(() => {
-    return usuarios.value.filter(usuario => {
-        const coincideCedula = usuario.id_usuario
-            .toString()
-            .includes(filtroCedula.value.trim())
-        const coincideCargo =
-            filtroCargo.value === '' ||
-            usuario.rol.toLowerCase() === filtroCargo.value.toLowerCase()
-        return coincideCedula && coincideCargo
-    })
+  return usuarios.value.filter(usuario => {
+    const coincideCedula = usuario.id_usuario?.toString()
+      .includes(filtroCedula.value.trim())
+    const coincideCargo =
+      filtroCargo.value === '' ||
+      usuario.rol?.toLowerCase() === filtroCargo.value.toLowerCase()
+    return coincideCedula && coincideCargo
+  })
 })
+
+
+
 </script>
 
 <style scoped>
