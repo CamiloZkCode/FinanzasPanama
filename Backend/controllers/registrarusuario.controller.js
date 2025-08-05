@@ -44,7 +44,7 @@ async function registrarUsuario(req, res) {
       message: 'Usuario registrado correctamente',
       datos: {
         username: username,
-        contraseña_temporal: contraseña
+        contraseña_temporal: contraseña 
       }
     });
   } catch (err) {
