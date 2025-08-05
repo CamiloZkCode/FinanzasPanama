@@ -127,7 +127,7 @@ const usuarioLogueado = computed(() => authStore.user)
 const roles = {
   1: 'Administrador',
   2: 'Supervisor',
-  3: 'Operario'
+  3: 'Trabajador'
 }
 
 const obtenerNombreRol = (idRol) => {
@@ -228,11 +228,15 @@ const cargarSupervisores = async () => {
     }
 }
 
-onMounted(() => {
-    console.log('Usuario logueado:', usuarioLogueado.value)
-    cargarSupervisores()
-    cargarUsuariosDelAdministrador()
-    console.log('Usuarios cargados:', usuarios.value)
+onMounted(async () => {
+  console.log('Iniciando carga de datos...')
+  try {
+    await cargarUsuariosDelAdministrador()
+    await cargarSupervisores()
+    console.log('Datos cargados completamente')
+  } catch (error) {
+    console.error('Error en mounted:', error)
+  }
 })
 
 async function cargarUsuariosDelAdministrador() {
@@ -242,19 +246,22 @@ async function cargarUsuariosDelAdministrador() {
     }
 
     const resultado = await creartablaUsuarioXAdministrador(data)
-    console.log("Resultado recibido:", resultado)
-
-    usuarios.value = [...resultado] // 👈 ASIGNACIÓN CORRECTA
+    console.log("Resultado crudo:", resultado)
+    
+    // FORMA MÁS SEGURA DE ASIGNAR (garantiza reactividad)
+    usuarios.value = Array.isArray(resultado) ? [...resultado] : []
+    
+    console.log("Usuarios después de asignar:", usuarios.value)
+    console.log("¿Es array?", Array.isArray(usuarios.value))
+    console.log("Longitud:", usuarios.value.length)
 
   } catch (error) {
-    console.error("Error al cargar usuarios del administrador:", error)
+    console.error("Error al cargar usuarios:", error)
+    usuarios.value = [] // Limpiar en caso de error
   }
 }
 
-
-const usuarios = ref([
-   
-])
+const usuarios = ref([])
 
 
 const filtroCedula = ref('')
@@ -262,12 +269,19 @@ const filtroCargo = ref('')
 
 // Filtro combinado
 const usuariosFiltrados = computed(() => {
+  if (!Array.isArray(usuarios.value)) return []
+  
   return usuarios.value.filter(usuario => {
-    const coincideCedula = usuario.id_usuario?.toString()
+    const usuarioValido = usuario && typeof usuario === 'object'
+    if (!usuarioValido) return false
+    
+    const coincideCedula = usuario.id?.toString()
       .includes(filtroCedula.value.trim())
-    const coincideCargo =
-      filtroCargo.value === '' ||
-      usuario.rol?.toLowerCase() === filtroCargo.value.toLowerCase()
+    
+    const coincideCargo = filtroCargo.value === '' ||
+      obtenerNombreRol(usuario.id_rol).toLowerCase()
+        .includes(filtroCargo.value.toLowerCase())
+    
     return coincideCedula && coincideCargo
   })
 })
