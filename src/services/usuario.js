@@ -38,9 +38,9 @@ export async function creartablaUsuarioXAdministrador(data) {
   } 
 }
 //Función : Rellenar tabla , accede a ruta en el backend
-export async function crearatablaUsuarioXSupervisor(tabla) {
+export async function creartablaUsuarioXSupervisor(data) {
   try {
-    const res = await API.post('/usuarios/cargartablausuarioXSupervisor', tabla)
+    const res = await API.post('/usuarios/cargartablausuarioXsupervisor', data)
     return res.data
   } catch (err) {
     throw err.response?.data || err

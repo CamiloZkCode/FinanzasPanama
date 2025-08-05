@@ -63,9 +63,11 @@
 
 <script setup>
 
-import { ref, computed } from 'vue'
-import { registrarUsuario } from '@/services/usuario'
+import { ref, computed,onMounted } from 'vue'
+import { registrarUsuario,creartablaUsuarioXSupervisor} from '@/services/usuario'
 import { useAuthStore } from '@/stores/auth'
+import alertify from 'alertifyjs'
+import 'alertifyjs/build/css/alertify.css'
 
 //Recupera id administrador 
 const authStore = useAuthStore()
@@ -90,8 +92,20 @@ const limpiarFormulario = () => {
     nombre: "",
     correo: "",
     telefono: "",
+    id_rol: '3',
+    id_administrador: null
   };
 };
+
+onMounted(async () => {
+  console.log('Iniciando carga de datos...')
+  try {
+    await cargarUsuariosDelSupervisor()
+    console.log('Datos cargados completamente')
+  } catch (error) {
+    console.error('Error en mounted:', error)
+  }
+})
 
 // Función para guardar usuario (aquí accedes al la url gestionada por axios)
 const guardarUsuario = async () => {
@@ -99,39 +113,61 @@ const guardarUsuario = async () => {
     // Siempre asigna el ID del usuario logueado como supervisor
     usuario.value.id_administrador = usuarioLogueado.value.id
 
-    await registrarUsuario(usuario.value)
-    alert('Usuario registrado con éxito')
-    mostrarUsuario.value = false
+    const respuesta= await  registrarUsuario(usuario.value);
+
+    alertify.alert(
+            'Usuario registrado con éxito',
+            `
+                <div style="text-align: left;">
+                <strong>Nombre de usuario:</strong> ${respuesta.datos.username}<br>
+                <strong>Contraseña temporal:</strong> ${respuesta.datos.contraseña_temporal}
+                </div>
+            `,
+            function () {
+                // ✅ Esta función se ejecuta SÓLO cuando el usuario hace clic en 'OK'.
+                // Aquí cerramos el modal principal, limpiamos el formulario y recargamos los datos.
+                mostrarUsuario.value = false;
+                limpiarFormulario();
+                cargarUsuariosDelSupervisor();
+            }
+        ).set({
+            transition: 'fade',
+            movable: false,
+            resizable: false,
+            pinnable: false,
+            closable: true,
+        });
+
+    } catch (error) {
+        console.error(error);
+        alertify.alert('Error', error.message || 'Error al registrar usuario');
+    }
+};
+
+async function cargarUsuariosDelSupervisor() {
+  try {
+    const data = {
+      id_administrador: usuarioLogueado.value.id 
+    }
+
+    const resultado = await creartablaUsuarioXSupervisor(data)
+    console.log("Resultado crudo:", resultado)
+    
+    // FORMA MÁS SEGURA DE ASIGNAR (garantiza reactividad)
+    usuarios.value = Array.isArray(resultado) ? [...resultado] : []
+    
+    console.log("Usuarios después de asignar:", usuarios.value)
+    console.log("¿Es array?", Array.isArray(usuarios.value))
+    console.log("Longitud:", usuarios.value.length)
+
   } catch (error) {
-    alert(`Error al registrar usuario: ${error.message || error}`)
+    console.error("Error al cargar usuarios:", error)
+    usuarios.value = [] // Limpiar en caso de error
   }
 }
-
-
-// Lista simulada de usuarios
+// Lista  de usuarios
 const usuarios = ref([
-    { id_usuario: 5554545, nombre: 'Carlos', jefe: 'Alberto', correo: 'carlos@example.com', telefono: '3001234567' },
-    { id_usuario: 1234567, nombre: 'Laura', jefe: '-', correo: 'laura@example.com', telefono: '3001234567' },
-    { id_usuario: 9876543, nombre: 'Julián', jefe: 'Carlos', correo: 'julian@example.com', telefono: '3001234567' },
-    { id_usuario: 1112223, nombre: 'Paola', jefe: 'Alberto', correo: 'paola@example.com', telefono: '3001234567' },
-    { id_usuario: 2223334, nombre: 'Diego', jefe: 'Laura', correo: 'diego@example.com', telefono: '3001234567' },
-    { id_usuario: 3334445, nombre: 'Sofía', jefe: 'Carlos', correo: 'sofia@example.com', telefono: '3001234567' },
-    { id_usuario: 4445556, nombre: 'Andrés', jefe: '-', correo: 'andres@example.com', telefono: '3001234567' },
-    { id_usuario: 5556667, nombre: 'Camila', jefe: 'Andrés', correo: 'camila@example.com', telefono: '3001234567' },
-    { id_usuario: 6667778, nombre: 'Luis', jefe: 'Camila', correo: 'luis@example.com', telefono: '3001234567' },
-    { id_usuario: 7778889, nombre: 'Ana', jefe: 'Carlos', correo: 'ana@example.com', telefono: '3001234567' },
-    { id_usuario: 8889990, nombre: 'Felipe', jefe: 'Paola', correo: 'felipe@example.com', telefono: '3001234567' },
-    { id_usuario: 9990001, nombre: 'Valentina', jefe: 'Andrés', correo: 'valentina@example.com', telefono: '3001234567' },
-    { id_usuario: 1110002, nombre: 'Esteban', jefe: 'Laura', correo: 'esteban@example.com', telefono: '3001234567' },
-    { id_usuario: 2221113, nombre: 'Daniela', jefe: 'Camila', correo: 'daniela@example.com', telefono: '3001234567' },
-    { id_usuario: 3332224, nombre: 'Sebastián', jefe: 'Julián', correo: 'sebastian@example.com', telefono: '3001234567' },
-    { id_usuario: 4443335, nombre: 'Mariana', jefe: 'Esteban', correo: 'mariana@example.com', telefono: '3001234567' },
-    { id_usuario: 5554446, nombre: 'Manuel', jefe: 'Felipe', correo: 'manuel@example.com', telefono: '3001234567' },
-    { id_usuario: 6665557, nombre: 'Natalia', jefe: 'Laura', correo: 'natalia@example.com', telefono: '3001234567' },
-    { id_usuario: 7776668, nombre: 'Elena', jefe: 'Camila', correo: 'elena@example.com', telefono: '3001234567' },
-    { id_usuario: 8887779, nombre: 'Tomás', jefe: 'Carlos', correo: 'tomas@example.com', telefono: '3001234567' }
 ])
-
 
 // Filtros
 const filtroCedula = ref('')
@@ -146,6 +182,7 @@ const usuariosFiltrados = computed(() => {
     })
 })
 </script>
+
 
 <style scoped>
 :root {

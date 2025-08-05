@@ -25,6 +25,14 @@ const obtenerSupervisores = async () => {
   return rows;
 };
 
+const obtenerUsuariosXSupervisor = async (id_usuario)=>{
+  const [rows] = await db.query(
+    "SELECT * from usuarios where id_administrador = ?", [
+    id_usuario,
+  ]);
+  return rows;
+}
+
 const obtenerUsuariosxAdmin = async (id_admin) => {
   const [rows] = await db.query(
     `
@@ -63,4 +71,5 @@ module.exports = {
   getRolById,
   obtenerSupervisores,
   obtenerUsuariosxAdmin,
+  obtenerUsuariosXSupervisor
 };

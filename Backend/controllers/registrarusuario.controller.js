@@ -44,7 +44,7 @@ async function registrarUsuario(req, res) {
       message: 'Usuario registrado correctamente',
       datos: {
         username: username,
-        contraseña_temporal: contraseña // Solo para confirmación, no debería enviarse en producción
+        contraseña_temporal: contraseña
       }
     });
   } catch (err) {
