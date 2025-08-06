@@ -75,9 +75,9 @@
                             <tr
                                 v-if="usuarioExpandido === prestamo.id_prestamo && idRol === 1 && prestamo.estado === 'pendiente'">
                                 <td colspan="7">
-                                    <div>
-                                        <button @click="aceptarPrestamo(prestamo.id_prestamo)">Aceptar</button>
-                                        <button @click="denegarPrestamo(prestamo.id_prestamo)">Denegar</button>
+                                    <div class="estado-funcionario">
+                                        <button @click="aceptarPrestamo(prestamo.id_prestamo)" class="aceptar">Aceptar</button>
+                                        <button @click="denegarPrestamo(prestamo.id_prestamo)" class="denegar">Denegar</button>
                                     </div>
                                 </td>
                             </tr>
@@ -179,6 +179,7 @@ const PrestamosFuncionario = ref([
         abono_total: 400,
         saldo: 600,
         fecha_solicitud: '2025-07-15',
+        estado: 'pendiente'
     },
     {
         id_prestamo: 2,
@@ -480,6 +481,20 @@ table tbody tr:last-child td {
 .info-extra {
     padding: 0.5rem 1rem;
     font-size: 0.95rem;
+}
+
+.estado-funcionario{
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.estado-funcionario .aceptar{
+    background-color: var(--color-aprobado);
+}
+
+.estado-funcionario .denegar{
+    background-color: var(--color-peligro);
 }
 
 /*======================Media Querry====================*/

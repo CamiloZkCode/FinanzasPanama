@@ -322,7 +322,7 @@ table tbody tr:last-child td {
 
 .contador-tarjetas .tarjetas-cobradas {
     width: 100%;
-    background: var(--color-riesgo);
+    background: var(--color-peligro);
     color: var(--color-blanco);
     padding: 0.5rem 1rem;
     border-radius: var(--card-border-radius);
