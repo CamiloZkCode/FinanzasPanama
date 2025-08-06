@@ -1,5 +1,5 @@
 const db = require("../config/db");
-const { crearPrestamo } = require('../models/prestamo.models');
+const { crearPrestamo } = require('../models/prestamos.models');
 
 
 async function registrarPrestamos(req, res) {
