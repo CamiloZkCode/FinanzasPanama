@@ -170,11 +170,6 @@
                 </table>
             </div>
 
-            <div class="contador-tarjetas">
-                <h4 class="tarjetas-cobradas">Tarjetas Cobradas: <span id="tarjeta">18</span></h4>
-                <h4 class="valor-cobrado">Valor Cobrado: <span id="cobro">$500</span></h4>
-            </div>
-
         </div>
     </div>
 </template>
@@ -592,36 +587,6 @@ table tbody tr:last-child td {
     padding: 0.8rem;
     border-radius: 5px;
 }
-
-/*=======================TARJETAS COBRADAS=========================*/
-.contador-tarjetas {
-    margin-top: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 0.5rem;
-}
-
-.contador-tarjetas .tarjetas-cobradas {
-    width: 100%;
-    background: var(--color-riesgo);
-    color: var(--color-blanco);
-    padding: 0.5rem 1rem;
-    border-radius: var(--card-border-radius);
-    font-size: 1rem;
-
-}
-
-.contador-tarjetas .valor-cobrado {
-    width: 100%;
-    background-color: var(--color-aprobado);
-    color: var(--color-blanco);
-    padding: 0.5rem 1rem;
-    border-radius: var(--card-border-radius);
-    font-size: 1rem;
-}
-
 /*======================Media Querry====================*/
 
 @media screen and (max-width: 768px) {

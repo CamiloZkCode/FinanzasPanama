@@ -193,21 +193,6 @@
                 </div>
             </div>
         </div>
-
-
-        <div class="acordeon-item">
-            <button class="acordeon-header" @click="toggle(2)">
-                Observaciones
-            </button>
-            <div v-show="activo === 2" class="acordeon-body">
-                <div class="bloque">
-                    <h4>Observaciones / Quejas</h4>
-                    <ul>
-                        <li>El Ascesor a llegado tarde el dia 22 de marzo.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
     </div>
 </template>
 

@@ -1,95 +1,5 @@
 <template>
     <div>
-        <div class="contenedor-botones">
-            <button @click="mostrarCliente = true">
-                Crear Cliente
-                <span class="material-symbols-outlined">person_add</span>
-            </button>
-
-            <button class="credito" @click="mostrarCredito = true">
-                Crear Prestamo
-                <span class="material-symbols-outlined">currency_exchange</span>
-            </button>
-
-        </div>
-
-        <!-- Modal Cliente -->
-        <div v-if="mostrarCliente" class="modal-overlay">
-            <div class="modal-content">
-                <span class="material-symbols-outlined close-icon" @click="mostrarCliente = false">close</span>
-                <h2>Registrar Cliente</h2>
-                <form @submit.prevent="guardarCliente" enctype="multipart/form-data">
-                    <input v-model="cliente.documento" type="number" placeholder="Documento" required />
-                    <input v-model="cliente.nombre" placeholder="Nombre" required />
-                    <input v-model="cliente.apellido" placeholder="Apellido" required />
-                    <input v-model="cliente.direccion_casa" placeholder="Dirección casa" />
-                    <input v-model="cliente.direccion_trabajo" placeholder="Dirección trabajo" />
-                    <input v-model="cliente.telefono" placeholder="Teléfono" />
-                    <input v-model="cliente.ocupacion" placeholder="Ocupación" />
-                    <input v-model="cliente.referencia" placeholder="Referencia" />
-
-                    <label>Selecciona la Ruta</label>
-                    <select v-model="cliente.id_ruta">
-                        <option disabled value="">Seleccione una ruta</option>
-                        <option v-for="ruta in rutas" :key="ruta.id" :value="ruta.id">{{ ruta.nombre }}</option>
-                    </select>
-
-                    <label>Foto de la cédula:</label>
-                    <input type="file" @change="onFileChange($event, 'cedula')" accept="image/*,application/pdf" />
-
-                    <label>Foto del negocio:</label>
-                    <input type="file" @change="onFileChange($event, 'negocio')" accept="image/*,application/pdf" />
-
-                    <label>Documento del negocio:</label>
-                    <input type="file" @change="onFileChange($event, 'documentonegocio')"
-                        accept="image/*,application/pdf" />
-
-                    <button type="submit">Guardar Cliente</button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Modal Crédito -->
-        <div v-if="mostrarCredito" class="modal-overlay">
-            <div class="modal-content">
-                <span class="material-symbols-outlined close-icon"
-                    @click="mostrarCredito = false; resetearFormularioCredito()">close</span>
-                <h2>Registrar Préstamo</h2>
-                <form @submit.prevent="guardarCredito">
-                    <input v-model="credito.cedula_cliente" type="number" placeholder="Cédula del Cliente" required />
-
-                    <label>Fecha de Solicitud:</label>
-                    <input v-model="credito.fecha_solicitud" type="date" readonly />
-
-                    <label>Moneda:</label>
-                    <select v-model="credito.moneda">
-                        <option value="USD">Dólares (USD)</option>
-                        <option value="CLP">Pesos Chilenos (CLP)</option>
-                        <option value="BRL">Real Brasileño (BRL)</option>
-                    </select>
-
-                    <label>Prestamo:</label>
-                    <input v-model="credito.valor_prestamo" type="number" placeholder="Valor del Préstamo" required
-                        min="1" />
-
-                    <label>Cantidad de Cuotas (máx. 24):</label>
-                    <input v-model="credito.cuotas" type="number" :max="24" required min="1" />
-
-                    <label>Valor por Cuota:</label>
-                    <input :value="formatearMoneda(credito.valor_cuota)" type="text" readonly />
-
-                    <label>Valor Total (+20%):</label>
-                    <input :value="formatearMoneda(credito.valor_total)" type="text" readonly />
-
-
-                    <label>Fecha de Finalización:</label>
-                    <input v-model="credito.fecha_fin" type="date" readonly />
-
-                    <button type="submit">Guardar Crédito</button>
-                </form>
-            </div>
-        </div>
-
         <!-- Tabla -->
         <div class="contenedor-tabla">
 
@@ -108,8 +18,8 @@
                             <th class="columna-min">N°Pagada</th>
                             <th>Nombre</th>
                             <th>Prestamo</th>
+                            <th>Supervisor</th>
                             <th>Asesor</th>
-                            <th>Fecha Solicitud</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -123,9 +33,9 @@
                                     </div>
                                 </td>
                                 <td>{{ Clientes.nombre }}</td>
-                                <td>${{ Clientes.prestamo_total}}</td>
+                                <td>${{ Clientes.prestamo_total }}</td>
                                 <td>{{ Clientes.nombre }}</td>
-                                <td>{{ Clientes.fecha_prestamo }}</td>
+                                <td>{{ Clientes.nombre }}</td>
                                 <td>
                                     <span class="material-symbols-outlined ver-mas"
                                         @click="toggleExpand(Clientes.id_cliente)">
@@ -169,6 +79,12 @@
                     </tbody>
                 </table>
             </div>
+
+            <div class="contador-tarjetas">
+                <h4 class="tarjetas-cobradas">Tarjetas Cobradas: <span id="tarjeta">18</span></h4>
+                <h4 class="valor-cobrado">Valor Cobrado: <span id="cobro">$500</span></h4>
+            </div>
+
         </div>
     </div>
 </template>
@@ -182,32 +98,13 @@ const authStore = useAuthStore()
 const usuarioLogueado = computed(() => authStore.user)
 
 // Modales
-const mostrarCliente = ref(false)
-const mostrarCredito = ref(false)
 
 // Cliente
-const cliente = ref({
-    documento: '',
-    nombre: '',
-    apellido: '',
-    direccion_casa: '',
-    direccion_trabajo: '',
-    telefono: '',
-    ocupacion: '',
-    referencia: '',
-    id_ruta: ''
-})
 
-// Rutas
-const rutas = ref([
-    { id: 1, nombre: 'Ruta 1' },
-    { id: 2, nombre: 'Ruta 2' }
-])
 
-const guardarCliente = () => {
-    console.log('Cliente registrado:', cliente.value)
-    mostrarCliente.value = false
-}
+
+
+
 
 const obtenerFechaActual = () => {
     const hoy = new Date()
@@ -243,57 +140,6 @@ const resetearFormularioCredito = () => {
     }
 }
 
-watch([() => credito.value.valor_prestamo, () => credito.value.cuotas], () => {
-    const prestamo = parseFloat(credito.value.valor_prestamo)
-    const cuotas = parseInt(credito.value.cuotas)
-
-    if (!isNaN(prestamo) && !isNaN(cuotas)) {
-        const totalConInteres = prestamo * 1.2
-        credito.value.valor_total = totalConInteres.toFixed(2)
-        credito.value.valor_cuota = (totalConInteres / cuotas).toFixed(2)
-
-        const hoy = new Date()
-        hoy.setMinutes(hoy.getMinutes() - hoy.getTimezoneOffset())
-        const fechaLocal = new Date(hoy)
-
-        let dias = cuotas
-        while (dias > 0) {
-            fechaLocal.setDate(fechaLocal.getDate() + 1)
-            const dia = fechaLocal.getDay()
-            if (dia !== 0) dias-- // Ignora domingos
-        }
-
-        credito.value.fecha_fin = fechaLocal.toISOString().substring(0, 10)
-    } else {
-        credito.value.valor_total = ""
-        credito.value.valor_cuota = ""
-        credito.value.fecha_fin = ""
-    }
-})
-
-const localesPorMoneda = {
-    USD: 'en-US',
-    CLP: 'es-CL',
-    BRL: 'pt-BR'
-}
-
-const formatearMoneda = (valor) => {
-    if (isNaN(valor)) return ''
-    const moneda = credito.value.moneda
-    const locale = localesPorMoneda[moneda] || 'en-US'
-    return new Intl.NumberFormat(locale, {
-        style: 'currency',
-        currency: moneda,
-        minimumFractionDigits: 0
-    }).format(valor)
-}
-
-
-const guardarCredito = () => {
-    console.log('Crédito registrado:', credito.value)
-    resetearFormularioCredito();
-    mostrarCredito.value = false
-}
 
 // Expansión de tabla
 const usuarioExpandido = ref(null)
@@ -311,7 +157,6 @@ const CreditoCliente = ref([
 ])
 
 // Generador de espacio de cuotas
-
 const generarCuotasPorCliente = (cuotas) => {
     const num = parseInt(cuotas) || 0
     return Array.from({ length: num }, (_, i) => i + 1)
@@ -345,98 +190,7 @@ const generarCuotasPorCliente = (cuotas) => {
     --box-shadow: 0 2rem 3rem var(--color-light);
 }
 
-.contenedor-botones {
-    margin-top: 1.5rem;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
 
-.contenedor-botones .credito {
-    background: var(--color-aprobado);
-}
-
-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    padding: 0.8rem 1rem;
-    font-size: 1rem;
-    background: var(--primer-color);
-    color: var(--color-blanco);
-    border: none;
-    border-radius: 0.4rem;
-    cursor: pointer;
-    height: 2.2rem;
-    line-height: 1;
-}
-
-
-
-
-
-input,
-select {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 8px;
-    border: 1px solid var(--color-info-luz);
-    border-radius: 6px;
-}
-
-.modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-}
-
-.modal-content {
-    background: var(--color-background);
-    padding: 2rem;
-    border-radius: var(--card-border-radius);
-    width: 100%;
-    max-width: 500px;
-    max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
-}
-
-.modal-content::-webkit-scrollbar {
-    height: 0.5rem;
-}
-
-.modal-content::-webkit-scrollbar-track {
-    background: transparent;
-    border-radius: 0.8rem;
-}
-
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-.close-icon {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    font-size: 28px;
-    color: var(--color-peligro);
-}
-
-.close-icon:hover {
-    color: var(--color-peligro);
-}
 
 .contenedor-tabla {
     margin-top: 1.0rem;
@@ -480,6 +234,7 @@ input[type="number"]::-webkit-inner-spin-button {
     color: var(--color-oscuro);
     cursor: pointer;
 }
+
 
 
 /*=====================Tabla============*/
@@ -576,7 +331,7 @@ table tbody tr:last-child td {
     grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
     margin-top: 0.5rem;
-    width:300px;
+    width: 300px;
 }
 
 .cuota {
@@ -587,54 +342,42 @@ table tbody tr:last-child td {
     border-radius: 5px;
 }
 
+/*=======================TARJETAS COBRADAS=========================*/
+.contador-tarjetas {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+}
+
+.contador-tarjetas .tarjetas-cobradas {
+    width: 100%;
+    background: var(--color-riesgo);
+    color: var(--color-blanco);
+    padding: 0.5rem 1rem;
+    border-radius: var(--card-border-radius);
+    font-size: 1rem;
+
+}
+
+.contador-tarjetas .valor-cobrado {
+    width: 100%;
+    background-color: var(--color-aprobado);
+    color: var(--color-blanco);
+    padding: 0.5rem 1rem;
+    border-radius: var(--card-border-radius);
+    font-size: 1rem;
+}
 
 /*======================Media Querry====================*/
 
 @media screen and (max-width: 768px) {
 
-    /*==============Modales===========================*/
-    .modal-content {
-        width: 90%;
-        height: auto;
-        max-height: 90vh;
-        overflow-y: auto;
-        padding: 1.5rem;
-        font-size: 0.9rem;
-    }
-
-
-    .close-icon {
-        font-size: 24px;
-        top: 8px;
-        right: 8px;
-    }
-
-    .modal-content h2 {
-        font-size: 1.3rem;
-        margin-bottom: 1rem;
-    }
-
-    .modal-content input,
-    .modal-content select {
-        font-size: 1.2rem;
-        padding: 0.6rem;
-    }
-
-    .modal-content button {
-        font-size: 0.9rem;
-        padding: 0.6rem 1rem;
-    }
-
     /*===================tabla ======================*/
-
-    input,
-    select {
-        font-size: 0.9rem;
-        padding: 0.6rem;
-    }
-
     .filtros {
-        flex-direction: column;
+        margin-top: 2rem;
         align-items: stretch;
         align-items: center;
         gap: 1rem;
@@ -652,7 +395,7 @@ table tbody tr:last-child td {
 
 
     .tabla-scrollable {
-        height: 60vh;
+        height: 55vh;
     }
 
 
@@ -667,7 +410,7 @@ table tbody tr:last-child td {
     .contenedor-tabla table {
         width: 100%;
         margin-top: 1rem;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
     }
 
     .contenedor-tabla .tabla-clientes td,
@@ -677,10 +420,9 @@ table tbody tr:last-child td {
     }
 
     .contenedor-tabla .columna-min {
-        width: 40px;
         white-space: nowrap;
         text-align: center;
-        font-size: 0.9rem;
+        font-size: 0.8rem;
     }
 
     .contenedor-tabla table span {

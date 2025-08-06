@@ -174,12 +174,6 @@
                     </tbody>
                 </table>
             </div>
-
-            <div class="contador-tarjetas">
-                <h4 class="tarjetas-cobradas">Tarjetas Cobradas: <span id="tarjeta">18</span></h4>
-                <h4 class="valor-cobrado">Valor Cobrado: <span id="cobro">$500</span></h4>
-            </div>
-
         </div>
     </div>
 </template>
@@ -315,10 +309,10 @@ const toggleExpand = (id) => {
 
 // Datos de prueba
 const CreditoCliente = ref([
-    { id_cliente: 1001, nombre: 'María Gómez', telefono: '3123456789', direccion: 'Calle 10 #15-20', casa: 'Casa 1', numero_cuotas: 20, cuotas_pagadas: 5, cuotas_deberia: 8, abono: 100000, abono_total: 500000, prestamo_total: 1200000, fecha_prestamo: '2025-06-15', fecha_finalizacion: '2025-11-30' },
-    { id_cliente: 1002, nombre: 'Luis Martínez', telefono: '3132223344', direccion: 'Carrera 8 #45-12', casa: 'Casa 2', numero_cuotas: 24, cuotas_pagadas: 10, cuotas_deberia: 12, abono: 150000, abono_total: 1000000, prestamo_total: 1500000, fecha_prestamo: '2025-05-01', fecha_finalizacion: '2025-10-20' },
-    { id_cliente: 1003, nombre: 'Ana Torres', telefono: '3149998877', direccion: 'Diagonal 3 #21-18', casa: 'Casa 3', numero_cuotas: 18, cuotas_pagadas: 18, cuotas_deberia: 18, abono: 120000, abono_total: 1080000, prestamo_total: 1080000, fecha_prestamo: '2025-02-10', fecha_finalizacion: '2025-07-10' },
-    { id_cliente: 1004, nombre: 'Jorge Herrera', telefono: '3118887766', direccion: 'Av. Siempre Viva #123', casa: 'Casa 4', numero_cuotas: 12, cuotas_pagadas: 3, cuotas_deberia: 6, abono: 90000, abono_total: 270000, prestamo_total: 600000, fecha_prestamo: '2025-07-01', fecha_finalizacion: '2025-12-15' }
+    { id_cliente: 1001, nombre: 'María Gómez', telefono: '3123456789', direccion: 'Calle 10 #15-20', casa: 'Casa 1', numero_cuotas: 20, cuotas_pagadas: 5, cuotas_deberia: 8, abono: 100, abono_total: 500, prestamo_total: 1200, fecha_prestamo: '2025-06-15', fecha_finalizacion: '2025-11-30' },
+    { id_cliente: 1002, nombre: 'Luis Martínez', telefono: '3132223344', direccion: 'Carrera 8 #45-12', casa: 'Casa 2', numero_cuotas: 24, cuotas_pagadas: 10, cuotas_deberia: 12, abono: 150, abono_total: 1000, prestamo_total: 1500, fecha_prestamo: '2025-05-01', fecha_finalizacion: '2025-10-20' },
+    { id_cliente: 1003, nombre: 'Ana Torres', telefono: '3149998877', direccion: 'Diagonal 3 #21-18', casa: 'Casa 3', numero_cuotas: 18, cuotas_pagadas: 18, cuotas_deberia: 18, abono: 120, abono_total: 300, prestamo_total: 1500, fecha_prestamo: '2025-02-10', fecha_finalizacion: '2025-07-10' },
+    { id_cliente: 1004, nombre: 'Jorge Herrera', telefono: '3118887766', direccion: 'Av. Siempre Viva #123', casa: 'Casa 4', numero_cuotas: 12, cuotas_pagadas: 3, cuotas_deberia: 6, abono: 90, abono_total: 270, prestamo_total: 900, fecha_prestamo: '2025-07-01', fecha_finalizacion: '2025-12-15' }
 ])
 
 // Generador de espacio de cuotas
@@ -609,33 +603,6 @@ table tbody tr:last-child td {
 }
 
 /*=======================TARJETAS COBRADAS=========================*/
-.contador-tarjetas {
-    margin-top: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 0.5rem;
-}
-
-.contador-tarjetas .tarjetas-cobradas {
-    width: 100%;
-    background: var(--color-riesgo);
-    color: var(--color-blanco);
-    padding: 0.5rem 1rem;
-    border-radius: var(--card-border-radius);
-    font-size: 1rem;
-
-}
-
-.contador-tarjetas .valor-cobrado {
-    width: 100%;
-    background-color: var(--color-aprobado);
-    color: var(--color-blanco);
-    padding: 0.5rem 1rem;
-    border-radius: var(--card-border-radius);
-    font-size: 1rem;
-}
 
 /*======================Media Querry====================*/
 
