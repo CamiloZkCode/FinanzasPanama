@@ -10,7 +10,6 @@
                 Crear Prestamo
                 <span class="material-symbols-outlined">currency_exchange</span>
             </button>
-
         </div>
 
         <!-- Modal Cliente -->
@@ -99,6 +98,12 @@
                     <input class="filtro-nom" type="text" placeholder="Busqueda por nombre" />
                     <span class="material-symbols-outlined">search</span>
                 </div>
+
+                <div class="cambiar-ruta">
+                    <button class="editar-ruta">
+                        <span class="material-symbols-outlined edit">edit</span>
+                    </button>
+                </div>
             </div>
 
             <div class="tabla-scrollable">
@@ -123,7 +128,7 @@
                                     </div>
                                 </td>
                                 <td>{{ Clientes.nombre }}</td>
-                                <td>${{ Clientes.prestamo_total}}</td>
+                                <td>${{ Clientes.prestamo_total }}</td>
                                 <td>{{ Clientes.nombre }}</td>
                                 <td>{{ Clientes.nombre }}</td>
                                 <td>
@@ -487,6 +492,16 @@ input[type="number"]::-webkit-inner-spin-button {
     cursor: pointer;
 }
 
+.cambiar-ruta{
+   margin-right: 2rem;
+}
+
+.editar-ruta{
+    background:var(--color-riesgo);
+    color: var(--color-blanco);
+}
+
+
 
 /*=====================Tabla============*/
 .tabla-scrollable {
@@ -582,7 +597,7 @@ table tbody tr:last-child td {
     grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
     margin-top: 0.5rem;
-    width:300px;
+    width: 300px;
 }
 
 .cuota {
@@ -668,7 +683,7 @@ table tbody tr:last-child td {
     }
 
     .filtros {
-        flex-direction: column;
+        margin-top: 2rem;
         align-items: stretch;
         align-items: center;
         gap: 1rem;
@@ -686,7 +701,7 @@ table tbody tr:last-child td {
 
 
     .tabla-scrollable {
-        height: 60vh;
+        height: 55vh;
     }
 
 
@@ -701,7 +716,7 @@ table tbody tr:last-child td {
     .contenedor-tabla table {
         width: 100%;
         margin-top: 1rem;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
     }
 
     .contenedor-tabla .tabla-clientes td,
@@ -711,10 +726,9 @@ table tbody tr:last-child td {
     }
 
     .contenedor-tabla .columna-min {
-        width: 40px;
         white-space: nowrap;
         text-align: center;
-        font-size: 0.9rem;
+        font-size: 0.8rem;
     }
 
     .contenedor-tabla table span {
